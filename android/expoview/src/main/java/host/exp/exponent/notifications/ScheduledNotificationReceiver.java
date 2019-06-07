@@ -13,6 +13,7 @@ import host.exp.exponent.ExponentManifest;
 import host.exp.exponent.analytics.EXL;
 import host.exp.exponent.di.NativeModuleDepsProvider;
 import host.exp.exponent.kernel.KernelConstants;
+import host.exp.exponent.notifications.presenters.NotificationPresenterProvider;
 
 public class ScheduledNotificationReceiver extends BroadcastReceiver {
 
@@ -25,23 +26,15 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
 
   public void onReceive(Context context, Intent intent) {
     Bundle bundle = intent.getExtras();
-    HashMap details = (HashMap) bundle.getSerializable(KernelConstants.NOTIFICATION_OBJECT_KEY);
+    Bundle notification = bundle.getBundle(KernelConstants.NOTIFICATION_OBJECT_KEY);
     int notificationId = bundle.getInt(KernelConstants.NOTIFICATION_ID_KEY, 0);
 
-    NotificationHelper.showNotification(
-            context,
-            notificationId,
-            details,
-            mExponentManifest,
-            new NotificationHelper.Listener() {
-                public void onSuccess(int id) {
-                    // do nothing
-                }
-
-                public void onFailure(Exception e) {
-                    EXL.e(ScheduledNotificationReceiver.class.getName(), e);
-                }
-            });
+    NotificationPresenterProvider.getNotificationPresenter().presentNotification(
+        context.getApplicationContext(),
+        notification.getString("experienceId"),
+        notification,
+        notificationId
+    );
   }
 }
 

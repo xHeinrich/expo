@@ -27,6 +27,7 @@ type LocalNotification = {
     color?: string;
     sticky?: boolean;
     link?: string;
+    importanceBelowOreo: String?;
   };
 };
 

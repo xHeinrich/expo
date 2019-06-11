@@ -11,6 +11,7 @@ ${EXPONENT_CLIENT_DEPS}
     exclude: [
       'expo-module-template',
       'expo-payments-stripe',
+      'expo-updates',
     ]
   })
 

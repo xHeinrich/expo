@@ -2,7 +2,7 @@
 title: DeviceInfo
 ---
 
-Screen Orientation is defined as the orientation in which graphics are painted on the device. For example, the figure below has a device in a vertical and horizontal physical orientation, but a portrait screen orientation. For physical device orientation, see the orientation section of [Device Motion](../devicemotion/).
+Provide information of devices on the application.
 
 ![Portrait orientation in different physical orientations](/static/images/screen-orientation-portrait.png)
 
@@ -34,11 +34,59 @@ import { DeviceInfo } from 'expo';
 - deviceType
 - supportedABIs
 
+#### `DeviceInfo.brand: string`
+
+Gets the device brand.
+
+#### `DeviceInfo.carrier: string`
+
+Gets the carrier name (network operator).
+
+#### `DeviceInfo.getManufacturer: string`
+
+Gets the device manufacturer.
+
+#### `DeviceInfo.getModel: string`
+
+Gets the device model.
+
+#### `DeviceInfo.getPhoneNumber: string`
+
+Gets the device phone number.
+
+#### `DeviceInfo.getSerialNumber: string`
+
+Gets the device serial number.
+
+#### `DeviceInfo.getSystemName: string`
+
+Gets the device OS name.
+
+#### `DeviceInfo.getDeviceId: string`
+
+Gets the device ID.
+
 
 ### Methods
 
-- [`DeviceInfo.isBatteryCharging()`]
-- [`DeviceInfo.hasSystemFeature(feature)`]
+- [`DeviceInfo.getTotalDiskCapacity()`](#screenorientationallowasyncorientationlock)
+- [`DeviceInfo.getTotalMemory()`](#screenorientationlockasyncorientationlock)
+- [`DeviceInfo.getUniqueId()`](#screenorientationlockplatformasyncplatforminfo)
+- [`DeviceInfo.getUserAgent()`](#screenorientationunlockasync)
+- [`DeviceInfo.isAirPlaneMode()`](#screenorientationgetorientationasync)
+- [`DeviceInfo.isBatteryCharging()`](#screenorientationgetorientationlockasync)
+- [`DeviceInfo.isEmulator()`](#screenorientationgetplatformorientationlockasync)
+- [`DeviceInfo.isPinOrFingerprintSet()`](#screenorientationsupportsorientationlockasyncorientationlock)
+- [`DeviceInfo.isTablet()`](#screenorientationremoveorientationchangelisteners)
+- [`DeviceInfo.hasNotch()`](#screenorientationremoveorientationchangelistenersubscription)
+- [`DeviceInfo.getDeviceType()`](#screenorientationremoveorientationchangelistenersubscription)
+- [`DeviceInfo.supportedABIs()`](#screenorientationremoveorientationchangelistenersubscription)
+- [`DeviceInfo.hasSystemFeature(feature)`](#screenorientationremoveorientationchangelistenersubscription)
+- [`DeviceInfo.getBatteryLevelAsync()`](#screenorientationallowasyncorientationlock)
+- [`DeviceInfo.getFreeDiskStoragekAsync()`](#screenorientationgetorientationlockasync)
+- [`DeviceInfo.getIPAddressAsync()`](#screenorientationgetplatformorientationlockasync)
+- [`DeviceInfo.getMACAddressAsync()`](#screenorientationlockplatformasyncplatforminfo)
+- [`DeviceInfo.getPowerStateAsync()`](#screenorientationgetplatformorientationlockasync)
 
 ### Enum Types
 
@@ -79,6 +127,52 @@ List of all the native languages provided by the user settings. These are return
 Country code for your device.
 
 ## Methods
+
+### `DeviceInfo.getBatteryLevelAsync()`
+
+Get the battery level of the device as a float between 0 and 1.
+
+#### Returns
+
+A Promise that resolves to a float representing the battery level.
+
+### `DeviceInfo.getFreeDiskStoragekAsync()`
+
+Gets available storage size, in bytes.
+
+#### Returns
+
+A Promise that resolves to an integer of bytes available in the device's storage.
+
+### `DeviceInfo.getIPAddressAsync()`
+
+Gets the device current IP address.
+
+#### Returns
+
+A Promise that resolves to a string of IP address.
+
+### `DeviceInfo.getMACAddressAsync()`
+
+Gets the network adapter MAC address.
+
+#### Returns
+
+A Promise that resolves to a string of the network adapter MAC address.
+
+### `DeviceInfo.getPowerStateAsync()`
+
+Gets the power state of the device including the battery level, whether it is plugged in, and if the system is currently operating in low power mode. Displays a warning on iOS if battery monitoring not enabled, or if attempted on an emulator (where monitoring is not possible)
+
+#### Returns
+
+Returns a promise with an object with the following fields:
+
+- **batteryLevel (_float_)** -- a float between 0 and 1.
+
+- **batteryState (_string_)** -- `unplugged` if unplugged, `plugged` if plugged.
+
+- **lowPowerMode (_string_)** -- `true` if lowPowerMode is on, `false` if lowPowerMode is off.
 
 ### `DeviceInfo.getTotalDiskCapacity()`
 

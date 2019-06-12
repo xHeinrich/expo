@@ -4,8 +4,6 @@ title: DeviceInfo
 
 Provide information of devices on the application.
 
-![Portrait orientation in different physical orientations](/static/images/screen-orientation-portrait.png)
-
 This API allows changing supported screen orientations at runtime. This will take priority over the `orientation` key in `app.json`.
 
 On both iOS and Android platforms, changes to the screen orientation will override any system settings or user preferences. On Android, it is possible to change the screen orientation while taking the user's preferred orientation into account. On iOS, user and system settings are not accessible by the application and any changes to the screen orientation will override existing settings.
@@ -22,18 +20,6 @@ import { DeviceInfo } from 'expo';
 
 ### Constants
 
-- totalDiskCapacity
-- totalMemory
-- uniqueId
-- userAgent
-- isAirplaneMode
-- isEmulator
-- isPinOrFingerprintSet
-- isTablet
-- hasNotch
-- deviceType
-- supportedABIs
-
 #### `DeviceInfo.brand: string`
 
 Gets the device brand.
@@ -42,51 +28,88 @@ Gets the device brand.
 
 Gets the carrier name (network operator).
 
-#### `DeviceInfo.getManufacturer: string`
+#### `DeviceInfo.manufacturer: string`
 
 Gets the device manufacturer.
 
-#### `DeviceInfo.getModel: string`
+#### `DeviceInfo.model: string`
 
 Gets the device model.
 
-#### `DeviceInfo.getPhoneNumber: string`
+#### `DeviceInfo.phoneNumber: string`
 
 Gets the device phone number.
 
-#### `DeviceInfo.getSerialNumber: string`
+#### `DeviceInfo.serialNumber: string`
 
 Gets the device serial number.
 
-#### `DeviceInfo.getSystemName: string`
+#### `DeviceInfo.systemName: string`
 
 Gets the device OS name.
 
-#### `DeviceInfo.getDeviceId: string`
+#### `DeviceInfo.deviceId: string`
 
 Gets the device ID.
 
+#### `DeviceInfo.totalDiskCapacity`
+
+Gets full disk storage size, in bytes.
+
+#### `DeviceInfo.totalMemory`
+
+Gets the device total memory, in bytes.
+
+#### `DeviceInfo.uniqueId`
+
+Gets the device unique ID.
+
+#### `DeviceInfo.userAgent`
+
+Gets the device User Agent.
+
+#### `DeviceInfo.isEmulator`
+
+Tells if the application is running in an emulator.
+
+#### DeviceInfo.isTablet
+
+Tells if the device is a tablet.
+
+#### DeviceInfo.hasNotch
+
+Tells if the device has a notch.
+
+#### DeviceInfo.deviceType
+
+Returns the device's type as a string, which will be one of:
+
+- `Handset`
+- `Tablet`
+- `Tv`
+- `Unknown`
+
+#### DeviceInfo.supportedABIs
+
+Returns a list of supported processor architecture version
+
+**Examples**
+
+```js
+DeviceInfo.supportedABIs(); // [ "arm64 v8", "Intel x86-64h Haswell", "arm64-v8a", "armeabi-v7a", "armeabi" ]
+```
 
 ### Methods
 
-- [`DeviceInfo.getTotalDiskCapacity()`](#screenorientationallowasyncorientationlock)
-- [`DeviceInfo.getTotalMemory()`](#screenorientationlockasyncorientationlock)
-- [`DeviceInfo.getUniqueId()`](#screenorientationlockplatformasyncplatforminfo)
-- [`DeviceInfo.getUserAgent()`](#screenorientationunlockasync)
-- [`DeviceInfo.isAirPlaneMode()`](#screenorientationgetorientationasync)
-- [`DeviceInfo.isBatteryCharging()`](#screenorientationgetorientationlockasync)
-- [`DeviceInfo.isEmulator()`](#screenorientationgetplatformorientationlockasync)
-- [`DeviceInfo.isPinOrFingerprintSet()`](#screenorientationsupportsorientationlockasyncorientationlock)
-- [`DeviceInfo.isTablet()`](#screenorientationremoveorientationchangelisteners)
-- [`DeviceInfo.hasNotch()`](#screenorientationremoveorientationchangelistenersubscription)
-- [`DeviceInfo.getDeviceType()`](#screenorientationremoveorientationchangelistenersubscription)
-- [`DeviceInfo.supportedABIs()`](#screenorientationremoveorientationchangelistenersubscription)
-- [`DeviceInfo.hasSystemFeature(feature)`](#screenorientationremoveorientationchangelistenersubscription)
+- [`DeviceInfo.isBatteryChargingAsync()`](#screenorientationgetorientationlockasync)
+- [`DeviceInfo.hasSystemFeatureAsync(feature)`](#screenorientationremoveorientationchangelistenersubscription) (Android only)
 - [`DeviceInfo.getBatteryLevelAsync()`](#screenorientationallowasyncorientationlock)
-- [`DeviceInfo.getFreeDiskStoragekAsync()`](#screenorientationgetorientationlockasync)
+- [`DeviceInfo.getFreeDiskStorageAsync()`](#screenorientationgetorientationlockasync)
 - [`DeviceInfo.getIPAddressAsync()`](#screenorientationgetplatformorientationlockasync)
 - [`DeviceInfo.getMACAddressAsync()`](#screenorientationlockplatformasyncplatforminfo)
 - [`DeviceInfo.getPowerStateAsync()`](#screenorientationgetplatformorientationlockasync)
+- `DeviceInfo.isAirplaneMode()` (Android only)
+- `DeviceInfo.isPinOrFingerprintSet()` 
 
 ### Enum Types
 
@@ -136,7 +159,7 @@ Get the battery level of the device as a float between 0 and 1.
 
 A Promise that resolves to a float representing the battery level.
 
-### `DeviceInfo.getFreeDiskStoragekAsync()`
+### `DeviceInfo.getFreeDiskStorageAsync()`
 
 Gets available storage size, in bytes.
 
@@ -174,36 +197,76 @@ Returns a promise with an object with the following fields:
 
 - **lowPowerMode (_string_)** -- `true` if lowPowerMode is on, `false` if lowPowerMode is off.
 
-### `DeviceInfo.getTotalDiskCapacity()`
+### `DeviceInfo.isAirplaneModeAsync()` (Android Only)
 
+Tells if the device is in AirPlaneMode.
 
-#### Arguments
+#### Returns 
 
-- **orientation (_OrientationLock_)** -- The orientation lock to apply. See the [`OrientationLock`](#screenorientationorientationlock) enum for possible values.
+Returns a `Promise<boolean>` that resolves to the `boolean` value for whether the device is in airplane mode or not.
 
-#### Returns
+**Examples**
 
-Returns a promise with `void` value, resolving when the orientation is set.
-
-#### Example
-
-```javascript
-function changeDeviceInfo() {
-  await DeviceInfo.allowAsync(DeviceInfo.Orientation.LANDSCAPE);
-}
+```js
+DeviceInfo.isAirPlaneModeAsync().then(airPlaneModeOn => {
+  // false
+});
 ```
 
-### `DeviceInfo.lockAsync(orientationLock)`
+### `DeviceInfo.isBatteryChargingAsync()`
 
-Lock the screen orientation to a particular OrientationLock.
+Tells if the battery is currently charging.
+
+#### Returns 
+
+Returns a `Promise<boolean>` that resolves the `boolean` value for whether the device is charging or not.
+
+**Examples**
+
+```js
+DeviceInfo.isBatteryChargingAsync().then(isCharging => {
+  // true or false
+});
+```
+
+### `DeviceInfo.hasSystemFeatureAsync(feature)` (Android Only)
+
+Tells if the device has a specific system feature.
 
 #### Arguments
 
-- **orientationLock (_OrientationLock_)** -- The orientation lock to apply. See the [`OrientationLock`](#screenorientationorientationlock) enum for possible values.
+- **feature (_string_)** -- A string of the feature we want to know that the device has.
 
 #### Returns
 
-Returns a promise with `void` value, resolving when the orientation is set.
+Returns a `Promise<boolean>` that resolves the `boolean` value for whether the device has the system feature passed to the function.
+
+**Examples**
+
+```js
+DeviceInfo.hasSystemFeature('amazon.hardware.fire_tv').then(hasFeature => {
+  // true or false
+}); 
+```
+
+### `DeviceInfo.isPinOrFingerprintSet()`
+
+Tells if a PIN number or a fingerprint was set for the device.
+
+#### Returns 
+Returns a `(callback)boolean`.
+
+**Examples**
+
+```js
+DeviceInfo.isPinOrFingerprintSet()(isPinOrFingerprintSet => {
+  if (!isPinOrFingerprintSet) {
+    // ...
+  }
+});
+```
+
+
 
 #### Error Codes
 
@@ -217,16 +280,6 @@ async function changeDeviceInfo() {
   await DeviceInfo.lockAsync(DeviceInfo.OrientationLock.LANDSCAPE_LEFT);
 }
 ```
-
-### `DeviceInfo.lockPlatformAsync(platformInfo)`
-
-#### Arguments
-
-- **platformInfo (_PlatformOrientationInfo_)** -- The platform specific lock to apply. See the [`PlatformOrientationInfo`](#screenorientationplatformorientationinfo) object type for the different platform formats.
-
-#### Returns
-
-Returns a promise with `void` value, resolving when the orientation is set and rejecting if an invalid option or value is passed.
 
 #### Error Codes
 

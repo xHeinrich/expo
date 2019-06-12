@@ -4,10 +4,6 @@ title: DeviceInfo
 
 Provide information of devices on the application.
 
-This API allows changing supported screen orientations at runtime. This will take priority over the `orientation` key in `app.json`.
-
-On both iOS and Android platforms, changes to the screen orientation will override any system settings or user preferences. On Android, it is possible to change the screen orientation while taking the user's preferred orientation into account. On iOS, user and system settings are not accessible by the application and any changes to the screen orientation will override existing settings.
-
 ## Installation 
 
 This API is pre-installed in [managed](../../introduction/managed-vs-bare/#managed-workflow) apps. It is not yet available for [bare](../../introduction/managed-vs-bare/#bare-workflow) React Native apps.
@@ -23,6 +19,10 @@ import { DeviceInfo } from 'expo';
 #### `DeviceInfo.brand: string`
 
 Gets the device brand.
+
+#### `DeviceInfo.freediskstorage: number`
+
+Gets available storage size, in bytes.
 
 #### `DeviceInfo.carrier: string`
 
@@ -52,35 +52,35 @@ Gets the device OS name.
 
 Gets the device ID.
 
-#### `DeviceInfo.totalDiskCapacity`
+#### `DeviceInfo.totalDiskCapacity: number`
 
 Gets full disk storage size, in bytes.
 
-#### `DeviceInfo.totalMemory`
+#### `DeviceInfo.totalMemory: number`
 
 Gets the device total memory, in bytes.
 
-#### `DeviceInfo.uniqueId`
+#### `DeviceInfo.uniqueId: string`
 
 Gets the device unique ID.
 
-#### `DeviceInfo.userAgent`
+#### `DeviceInfo.userAgent: string`
 
 Gets the device User Agent.
 
-#### `DeviceInfo.isEmulator`
+#### `DeviceInfo.isEmulator: boolean`
 
 Tells if the application is running in an emulator.
 
-#### DeviceInfo.isTablet
+#### `DeviceInfo.isTablet: boolean`
 
 Tells if the device is a tablet.
 
-#### DeviceInfo.hasNotch
+#### `DeviceInfo.hasNotch: boolean`
 
 Tells if the device has a notch.
 
-#### DeviceInfo.deviceType
+#### `DeviceInfo.deviceType: string`
 
 Returns the device's type as a string, which will be one of:
 
@@ -89,7 +89,7 @@ Returns the device's type as a string, which will be one of:
 - `Tv`
 - `Unknown`
 
-#### DeviceInfo.supportedABIs
+#### `DeviceInfo.supportedABIs: string[]`
 
 Returns a list of supported processor architecture version
 
@@ -101,53 +101,18 @@ DeviceInfo.supportedABIs(); // [ "arm64 v8", "Intel x86-64h Haswell", "arm64-v8a
 
 ### Methods
 
-- [`DeviceInfo.isBatteryChargingAsync()`](#screenorientationgetorientationlockasync)
-- [`DeviceInfo.hasSystemFeatureAsync(feature)`](#screenorientationremoveorientationchangelistenersubscription) (Android only)
-- [`DeviceInfo.getBatteryLevelAsync()`](#screenorientationallowasyncorientationlock)
-- [`DeviceInfo.getFreeDiskStorageAsync()`](#screenorientationgetorientationlockasync)
-- [`DeviceInfo.getIPAddressAsync()`](#screenorientationgetplatformorientationlockasync)
-- [`DeviceInfo.getMACAddressAsync()`](#screenorientationlockplatformasyncplatforminfo)
-- [`DeviceInfo.getPowerStateAsync()`](#screenorientationgetplatformorientationlockasync)
+- `DeviceInfo.isBatteryChargingAsync()`
+- `DeviceInfo.hasSystemFeatureAsync(feature)` (Android only)
+- `DeviceInfo.getBatteryLevelAsync()`
+- `DeviceInfo.getIPAddressAsync()`
+- `DeviceInfo.getMACAddressAsync()`
+- `DeviceInfo.getPowerStateAsync()` (IOS only)
 - `DeviceInfo.isAirplaneMode()` (Android only)
 - `DeviceInfo.isPinOrFingerprintSet()` 
-
-### Enum Types
-
-- [`DeviceInfo.Orientation`](#screenorientationorientation)
-- [`DeviceInfo.OrientationLock`](#screenorientationorientationlock)
-- [`DeviceInfo.SizeClassIOS`](#screenorientationsizeclassios)
-- [`DeviceInfo.WebOrientationLock`](#screenorientationweborientationlock)
-
-### Object Types
-
-- [`DeviceInfo.PlatformOrientationInfo`](#screenorientationplatformorientationinfo)
-- [`DeviceInfo.OrientationInfo`](#screenorientationorientationinfo)
-- [`DeviceInfo.OrientationChangeEvent`](#screenorientationorientationchangeevent)
-- [`Subscription`](#subscription)
-
-### Function Types
-
-- [`DeviceInfo.OrientationChangeListener`](#screenorientationorientationchangelistener)
 
 ### Errors
 
 - [Error Codes](#error-codes)
-
-## Constants
-
-This API is mostly synchronous and driven by constants. 
-
-### `Localization.locale: string`
-
-Native device language, returned in standard format. Ex: `en`, `en-US`, `es-US`.
-
-### `Localization.locales: Array<string>`
-
-List of all the native languages provided by the user settings. These are returned in the order the user defines in their native settings.
-
-### `Localization.country: ?string`
-
-Country code for your device.
 
 ## Methods
 
@@ -159,13 +124,13 @@ Get the battery level of the device as a float between 0 and 1.
 
 A Promise that resolves to a float representing the battery level.
 
-### `DeviceInfo.getFreeDiskStorageAsync()`
+**Examples**
 
-Gets available storage size, in bytes.
-
-#### Returns
-
-A Promise that resolves to an integer of bytes available in the device's storage.
+```js
+DeviceInfo.getBatteryLevelAsync().then(batteryLevel => {
+  // 0.759999
+});
+```
 
 ### `DeviceInfo.getIPAddressAsync()`
 
@@ -175,6 +140,14 @@ Gets the device current IP address.
 
 A Promise that resolves to a string of IP address.
 
+**Examples**
+
+```js
+DeviceInfo.getIPAddress().then(ip => {
+  // "92.168.32.44"
+});
+```
+
 ### `DeviceInfo.getMACAddressAsync()`
 
 Gets the network adapter MAC address.
@@ -183,7 +156,15 @@ Gets the network adapter MAC address.
 
 A Promise that resolves to a string of the network adapter MAC address.
 
-### `DeviceInfo.getPowerStateAsync()`
+**Examples**
+
+```js
+DeviceInfo.getMACAddress().then(mac => {
+  // "E5:12:D8:E5:69:97"
+});
+```
+
+### `DeviceInfo.getPowerStateAsync()` (IOS only)
 
 Gets the power state of the device including the battery level, whether it is plugged in, and if the system is currently operating in low power mode. Displays a warning on iOS if battery monitoring not enabled, or if attempted on an emulator (where monitoring is not possible)
 
@@ -196,6 +177,19 @@ Returns a promise with an object with the following fields:
 - **batteryState (_string_)** -- `unplugged` if unplugged, `plugged` if plugged.
 
 - **lowPowerMode (_string_)** -- `true` if lowPowerMode is on, `false` if lowPowerMode is off.
+
+
+**Examples**
+
+```js
+DeviceInfo.getPowerState().then(state => {
+  // {
+  //   batteryLevel: 0.759999,
+  //   batteryState: 'unplugged',
+  //   lowPowerMode: false,
+  // }
+});
+```
 
 ### `DeviceInfo.isAirplaneModeAsync()` (Android Only)
 
@@ -267,156 +261,14 @@ DeviceInfo.isPinOrFingerprintSet()(isPinOrFingerprintSet => {
 ```
 
 
-
 #### Error Codes
 
 - `ERR_SCREEN_ORIENTATION_INVALID_ORIENTATION_LOCK` - an invalid [`OrientationLock`](#screenorientationorientationlock) was passed in.
 - `ERR_SCREEN_ORIENTATION_UNSUPPORTED_ORIENTATION_LOCK` - the platform does not support the orientation lock policy.
-
-#### Example
-
-```javascript
-async function changeDeviceInfo() {
-  await DeviceInfo.lockAsync(DeviceInfo.OrientationLock.LANDSCAPE_LEFT);
-}
-```
-
-#### Error Codes
-
-- `ERR_SCREEN_ORIENTATION_INVALID_ORIENTATION_LOCK` - an invalid [`OrientationLock`](#screenorientationorientationlock) was passed in.
-- `ERR_SCREEN_ORIENTATION_UNSUPPORTED_ORIENTATION_LOCK` - the platform does not support the orientation lock policy.
-
-### `DeviceInfo.unlockAsync()`
-
-Sets the screen orientation back to the `OrientationLock.DEFAULT` policy.
-
-#### Returns
-
-Returns a promise with `void` value, resolving when the orientation is set.
-
-### `DeviceInfo.getOrientationAsync()`
-
-Gets the current screen orientation.
-
-#### Returns
-
-Returns a promise that resolves to an [`OrientationInfo`](#screenorientationorientationinfo) object value that reflects the current screen orientation.
-
-### `DeviceInfo.getOrientationLockAsync()`
-
-Gets the current screen orientation lock type.
-
-#### Returns
-
-Returns a promise with an [`OrientationLock`](#screenorientationorientationlock) value.
-
-### `DeviceInfo.getPlatformOrientationLockAsync()`
-
-Gets the platform specific screen orientation lock type.
-
-#### Returns
-
-Returns a promise with a [`PlatformOrientationInfo`](#screenorientationplatformorientationinfo) value.
-
-### `DeviceInfo.supportsOrientationLockAsync(orientationLock)`
-
-Returns whether the [`OrientationLock`](#screenorientationorientationlock) policy is supported on the device.
-
-#### Returns
-
-Returns a promise that resolves to a `boolean` value that reflects whether or not the orientationLock is supported.
-
-### `DeviceInfo.addOrientationChangeListener(listener)`
-
-Invokes the `listener` function when the screen orientation changes.
-
-#### Arguments
-
-- **listener (_OrientationChangeListener_)**
-  - Each orientation update will pass an object with the new [`OrientationChangeEvent`](#screenorientationorientationchangeevent) to the listener.
-
-#### Returns
-
-Returns an [`Subscription`](#subscription) object that can later be used to unsuscribe updates to the listener.
-
-### `DeviceInfo.removeOrientationChangeListeners()`
-
-Removes all listeners subscribed to orientation change updates.
-
-### `DeviceInfo.removeOrientationChangeListener(subscription)`
-
-Unsubscribes the listener associated with the `subscription` object from all orientation change updates.
-
-#### Arguments
-
-- **subscription (_Subscription_)**
-  - A subscription object that manages the updates passed to a listener function on an orientation change.
-
-## Enum types
-
-### `DeviceInfo.Orientation`
-
-- **`Orientation.UNKNOWN`** - An unknown screen orientation. For example, the device is flat, perhaps on a table.
-- **`Orientation.PORTRAIT`** - Portrait interface orientation (right side up or upside down).
-
-
-### `ScreenOrientation.OrientationLock`
-
-An enum whose values can be passed to the [`lockAsync`](#screenorientationlockasyncorientationlock) method.
-
-- **`OrientationLock.DEFAULT`** -- The default orientation. On iOS, this will allow all orientations except `Orientation.PORTRAIT_DOWN`. On Android, this lets the system decide the best orientation.
-- **`OrientationLock.ALL`** -- All four possible orientations
-- **`OrientationLock.UNKNOWN`** -- An unknown screen orientation lock. This is not a valid policy that can be applied in [`lockAsync`](#screenorientationlockasyncorientationlock).
-
-### `ScreenOrientation.SizeClassIOS`
-
-Each iOS device has a default set of [size classes](https://developer.apple.com/library/archive/featuredarticles/ViewControllerPGforiPhoneOS/TheAdaptiveModel.html) that you can use as a guide when designing your interface.
-
-- **`SizeClassIOS.REGULAR`**
-- **`SizeClassIOS.COMPACT`**
-- **`SizeClassIOS.UNKNOWN`**
-
-### `ScreenOrientation.WebOrientationLock`
-
-An enum representing the lock policies that can be applied on the web platform, modelled after the [W3C specification](https://w3c.github.io/screen-orientation/#dom-orientationlocktype). These values can be applied through the [`lockPlatformAsync`](#screenorientationlockplatformasyncplatforminfo) method.
-
-- **`PORTRAIT_PRIMARY`**
-- **`PORTRAIT_SECONDARY`**
-
-## Object Types
-
-### `ScreenOrientation.PlatformOrientationInfo`
-
-    - screenOrientationConstantAndroid (_integer_): A constant to set using the Android native [API](https://developer.android.com/reference/android/R.attr.html#screenOrientation). For example, in order to set the lock policy to [unspecified](https://developer.android.com/reference/android/content/pm/ActivityInfo.html#SCREEN_ORIENTATION_UNSPECIFIED), -1 should be passed in. (Android only)
-    - screenOrientationArrayIOS (Array[Orientation]): An array of orientations to allow on the iOS platform (iOS only)
-    - screenOrientationLockWebOrientation (_WebOrientationLock_): A web orientation lock to apply in the browser (web only)
-
-### `ScreenOrientation.OrientationInfo`
-
-    - orientation (_Orientation_): The current orientation of the device
-    - verticalSizeClass (_SizeClassIOS_): The [vertical size class](https://developer.apple.com/library/archive/featuredarticles/ViewControllerPGforiPhoneOS/TheAdaptiveModel.html) of the device (iOS only)
-    - horizontalSizeClass (_SizeClassIOS_): The [horizontal size class](https://developer.apple.com/library/archive/featuredarticles/ViewControllerPGforiPhoneOS/TheAdaptiveModel.html) of the device (iOS only)
-
-### `ScreenOrientation.OrientationChangeEvent`
-
-    - orientationLock (_OrientationLock_): The current OrientationLock of the device.
-    - orientationInfo (_OrientationInfo_): The current OrientationInfo of the device.
 
 ### `Subscription`
 
 A [subscription object](https://github.com/expo/expo/blob/master/packages/expo-react-native-adapter/src/EventEmitter.ts#L16).
-
-## Function Types
-
-### `ScreenOrientation.OrientationChangeListener`
-
-#### Args
-
-    - event (_OrientationChangeEvent_): An update with the most recent OrientationChangeEvent.
-
-#### Returns
-
-`void`
 
 ## Error Codes
 

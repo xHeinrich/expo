@@ -22,25 +22,23 @@ import { DeviceInfo } from 'expo';
 
 ### Constants
 
-- Constant 1
-- Constant 2
+- totalDiskCapacity
+- totalMemory
+- uniqueId
+- userAgent
+- isAirplaneMode
+- isEmulator
+- isPinOrFingerprintSet
+- isTablet
+- hasNotch
+- deviceType
+- supportedABIs
 
 
 ### Methods
 
-- [`DeviceInfo.getTotalDiskCapacity()`](#screenorientationallowasyncorientationlock)
-- [`DeviceInfo.getTotalMemory()`](#screenorientationlockasyncorientationlock)
-- [`DeviceInfo.getUniqueId()`](#screenorientationlockplatformasyncplatforminfo)
-- [`DeviceInfo.getUserAgent()`](#screenorientationunlockasync)
-- [`DeviceInfo.isAirPlaneMode()`](#screenorientationgetorientationasync)
-- [`DeviceInfo.isBatteryCharging()`](#screenorientationgetorientationlockasync)
-- [`DeviceInfo.isEmulator()`](#screenorientationgetplatformorientationlockasync)
-- [`DeviceInfo.isPinOrFingerprintSet()`](#screenorientationsupportsorientationlockasyncorientationlock)
-- [`DeviceInfo.isTablet()`](#screenorientationremoveorientationchangelisteners)
-- [`DeviceInfo.hasNotch()`](#screenorientationremoveorientationchangelistenersubscription)
-- [`DeviceInfo.getDeviceType()`](#screenorientationremoveorientationchangelistenersubscription)
-- [`DeviceInfo.supportedABIs()`](#screenorientationremoveorientationchangelistenersubscription)
-- [`DeviceInfo.hasSystemFeature(feature)`](#screenorientationremoveorientationchangelistenersubscription)
+- [`DeviceInfo.isBatteryCharging()`]
+- [`DeviceInfo.hasSystemFeature(feature)`]
 
 ### Enum Types
 

@@ -72,15 +72,15 @@ Gets the device User Agent.
 
 Tells if the application is running in an emulator.
 
-#### DeviceInfo.isTablet
+#### `DeviceInfo.isTablet`
 
 Tells if the device is a tablet.
 
-#### DeviceInfo.hasNotch
+#### `DeviceInfo.hasNotch`
 
 Tells if the device has a notch.
 
-#### DeviceInfo.deviceType
+#### `DeviceInfo.deviceType`
 
 Returns the device's type as a string, which will be one of:
 
@@ -89,7 +89,7 @@ Returns the device's type as a string, which will be one of:
 - `Tv`
 - `Unknown`
 
-#### DeviceInfo.supportedABIs
+#### `DeviceInfo.supportedABIs`
 
 Returns a list of supported processor architecture version
 
@@ -266,83 +266,6 @@ DeviceInfo.isPinOrFingerprintSet()(isPinOrFingerprintSet => {
 });
 ```
 
-
-
-#### Error Codes
-
-- `ERR_SCREEN_ORIENTATION_INVALID_ORIENTATION_LOCK` - an invalid [`OrientationLock`](#screenorientationorientationlock) was passed in.
-- `ERR_SCREEN_ORIENTATION_UNSUPPORTED_ORIENTATION_LOCK` - the platform does not support the orientation lock policy.
-
-#### Example
-
-```javascript
-async function changeDeviceInfo() {
-  await DeviceInfo.lockAsync(DeviceInfo.OrientationLock.LANDSCAPE_LEFT);
-}
-```
-
-#### Error Codes
-
-- `ERR_SCREEN_ORIENTATION_INVALID_ORIENTATION_LOCK` - an invalid [`OrientationLock`](#screenorientationorientationlock) was passed in.
-- `ERR_SCREEN_ORIENTATION_UNSUPPORTED_ORIENTATION_LOCK` - the platform does not support the orientation lock policy.
-
-### `DeviceInfo.unlockAsync()`
-
-Sets the screen orientation back to the `OrientationLock.DEFAULT` policy.
-
-#### Returns
-
-Returns a promise with `void` value, resolving when the orientation is set.
-
-### `DeviceInfo.getOrientationAsync()`
-
-Gets the current screen orientation.
-
-#### Returns
-
-Returns a promise that resolves to an [`OrientationInfo`](#screenorientationorientationinfo) object value that reflects the current screen orientation.
-
-### `DeviceInfo.getOrientationLockAsync()`
-
-Gets the current screen orientation lock type.
-
-#### Returns
-
-Returns a promise with an [`OrientationLock`](#screenorientationorientationlock) value.
-
-### `DeviceInfo.getPlatformOrientationLockAsync()`
-
-Gets the platform specific screen orientation lock type.
-
-#### Returns
-
-Returns a promise with a [`PlatformOrientationInfo`](#screenorientationplatformorientationinfo) value.
-
-### `DeviceInfo.supportsOrientationLockAsync(orientationLock)`
-
-Returns whether the [`OrientationLock`](#screenorientationorientationlock) policy is supported on the device.
-
-#### Returns
-
-Returns a promise that resolves to a `boolean` value that reflects whether or not the orientationLock is supported.
-
-### `DeviceInfo.addOrientationChangeListener(listener)`
-
-Invokes the `listener` function when the screen orientation changes.
-
-#### Arguments
-
-- **listener (_OrientationChangeListener_)**
-  - Each orientation update will pass an object with the new [`OrientationChangeEvent`](#screenorientationorientationchangeevent) to the listener.
-
-#### Returns
-
-Returns an [`Subscription`](#subscription) object that can later be used to unsuscribe updates to the listener.
-
-### `DeviceInfo.removeOrientationChangeListeners()`
-
-Removes all listeners subscribed to orientation change updates.
-
 ### `DeviceInfo.removeOrientationChangeListener(subscription)`
 
 Unsubscribes the listener associated with the `subscription` object from all orientation change updates.
@@ -352,13 +275,17 @@ Unsubscribes the listener associated with the `subscription` object from all ori
 - **subscription (_Subscription_)**
   - A subscription object that manages the updates passed to a listener function on an orientation change.
 
+#### Error Codes
+
+- `ERR_SCREEN_ORIENTATION_INVALID_ORIENTATION_LOCK` - an invalid [`OrientationLock`](#screenorientationorientationlock) was passed in.
+- `ERR_SCREEN_ORIENTATION_UNSUPPORTED_ORIENTATION_LOCK` - the platform does not support the orientation lock policy.
+
 ## Enum types
 
 ### `DeviceInfo.Orientation`
 
 - **`Orientation.UNKNOWN`** - An unknown screen orientation. For example, the device is flat, perhaps on a table.
 - **`Orientation.PORTRAIT`** - Portrait interface orientation (right side up or upside down).
-
 
 ### `ScreenOrientation.OrientationLock`
 

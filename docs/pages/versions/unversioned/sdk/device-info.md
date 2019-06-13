@@ -96,7 +96,7 @@ Returns a list of supported processor architecture version
 **Examples**
 
 ```js
-DeviceInfo.supportedABIs(); // [ "arm64 v8", "Intel x86-64h Haswell", "arm64-v8a", "armeabi-v7a", "armeabi" ]
+DeviceInfo.supportedABIs; // [ "arm64 v8", "Intel x86-64h Haswell", "arm64-v8a", "armeabi-v7a", "armeabi" ]
 ```
 
 ### Methods
@@ -107,7 +107,7 @@ DeviceInfo.supportedABIs(); // [ "arm64 v8", "Intel x86-64h Haswell", "arm64-v8a
 - `DeviceInfo.getIPAddressAsync()`
 - `DeviceInfo.getMACAddressAsync()`
 - `DeviceInfo.getPowerStateAsync()` (IOS only)
-- `DeviceInfo.isAirplaneMode()` (Android only)
+- `DeviceInfo.isAirplaneModeAsync()` (Android only)
 - `DeviceInfo.isPinOrFingerprintSet()` 
 
 ### Errors

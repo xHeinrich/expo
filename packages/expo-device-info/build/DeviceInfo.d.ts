@@ -1,2 +1,14 @@
+import { PowerState } from './DeviceInfo.types';
 export { default as ExpoDeviceInfoView } from './ExpoDeviceInfoView';
+export declare const brand: any;
+export declare const freeDiskStorage: any;
+export declare const carrier: any;
+export declare const manufacturer: any;
+export declare const model: any;
+export declare const phoneNumber: any;
+export declare const serialNumber: any;
+export declare const systemName: any;
 export declare function getBatteryLevelAsync(): Promise<number>;
+export declare function getIPAddressAsync(): Promise<string>;
+export declare function getMACAddressAsync(): Promise<string>;
+export declare function getPowerStateAsync(): Promise<PowerState>;

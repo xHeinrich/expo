@@ -8,9 +8,9 @@ import org.unimodules.core.ExportedModule;
 import org.unimodules.core.ModuleRegistry;
 import org.unimodules.core.Promise;
 import org.unimodules.core.interfaces.ExpoMethod;
-import org.unimodules.core.interfaces.ModuleRegistryConsumer;
+import org.unimodules.core.interfaces.RegistryLifecycleListener;
 
-public class DeviceInfoModule extends ExportedModule implements ModuleRegistryConsumer {
+public class DeviceInfoModule extends ExportedModule implements RegistryLifecycleListener {
   private static final String NAME = "ExpoDeviceInfo";
   private static final String TAG = DeviceInfoModule.class.getSimpleName();
 
@@ -26,7 +26,7 @@ public class DeviceInfoModule extends ExportedModule implements ModuleRegistryCo
   }
 
   @Override
-  public void setModuleRegistry(ModuleRegistry moduleRegistry) {
+  public void onCreate(ModuleRegistry moduleRegistry) {
     mModuleRegistry = moduleRegistry;
   }
 

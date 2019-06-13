@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.unimodules.core.ModuleRegistry;
 import org.unimodules.core.ViewManager;
-import org.unimodules.core.interfaces.ModuleRegistryConsumer;
+import org.unimodules.core.interfaces.RegistryLifecycleListener;
 
-public class DeviceInfoViewManager extends ViewManager<DeviceInfoView> implements ModuleRegistryConsumer {
+public class DeviceInfoViewManager extends ViewManager<DeviceInfoView> implements RegistryLifecycleListener {
   private static final String TAG = "ExpoDeviceInfoView";
 
   private ModuleRegistry mModuleRegistry;
@@ -35,7 +35,7 @@ public class DeviceInfoViewManager extends ViewManager<DeviceInfoView> implement
   }
 
   @Override
-  public void setModuleRegistry(ModuleRegistry moduleRegistry) {
+  public void onCreate(ModuleRegistry moduleRegistry) {
     mModuleRegistry = moduleRegistry;
   }
 }

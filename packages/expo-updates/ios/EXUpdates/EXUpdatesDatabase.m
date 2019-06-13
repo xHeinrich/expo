@@ -83,12 +83,12 @@ static const int kEXUpdatesDatabaseStatusPending = 2;
    );\
    CREATE TABLE \"assets\" (\
    \"id\"  INTEGER PRIMARY KEY AUTOINCREMENT,\
-   \"url\"  TEXT,\
+   \"url\"  TEXT NOT NULL,\
    \"headers\"  TEXT,\
-   \"type\"  TEXT,\
+   \"type\"  TEXT NOT NULL,\
    \"metadata\"  TEXT,\
-   \"download_time\"  INTEGER,\
-   \"relative_path\"  TEXT,\
+   \"download_time\"  INTEGER NOT NULL,\
+   \"relative_path\"  TEXT NOT NULL,\
    \"hash_atomic\"  BLOB NOT NULL,\
    \"hash_content\"  BLOB NOT NULL,\
    \"hash_type\"  INTEGER NOT NULL\
@@ -111,7 +111,7 @@ static const int kEXUpdatesDatabaseStatusPending = 2;
 - (void)addUpdateWithId:(NSUUID *)updateId
              commitTime:(NSNumber *)commitTime
          binaryVersions:(NSString *)binaryVersions
-               metadata:(NSDictionary *)metadata
+               metadata:(NSDictionary * _Nullable)metadata
 {
   if (!_db) {
     [[EXUpdatesAppController sharedInstance] handleErrorWithDomain:kEXUpdatesDatabaseErrorDomain description:@"Missing database handle" info:nil isFatal:YES];
@@ -124,15 +124,15 @@ static const int kEXUpdatesDatabaseStatusPending = 2;
                       updateId,
                       commitTime,
                       binaryVersions,
-                      metadata,
+                      metadata ?: [NSNull null],
                       @(kEXUpdatesDatabaseStatusPending)
                       ]];
 }
 
 - (void)addAssetWithUrl:(NSString *)url
-                headers:(NSDictionary *)headers
+                headers:(NSDictionary * _Nullable)headers
                    type:(NSString *)type
-               metadata:(NSDictionary *)metadata
+               metadata:(NSDictionary * _Nullable)metadata
            downloadTime:(NSDate *)downloadTime
            relativePath:(NSString *)relativePath
              hashAtomic:(NSString *)hashAtomic
@@ -150,9 +150,9 @@ static const int kEXUpdatesDatabaseStatusPending = 2;
    VALUES (?1, ?2, ?3, ?4, ?4, 0);"
            withArgs:@[
                       url,
-                      headers,
+                      headers ?: [NSNull null],
                       type,
-                      metadata,
+                      metadata ?: [NSNull null],
                       [NSNumber numberWithDouble:[downloadTime timeIntervalSince1970]],
                       relativePath,
                       hashAtomic,
@@ -338,8 +338,13 @@ static const int kEXUpdatesDatabaseStatusPending = 2;
     } else if ([obj isKindOfClass:[NSDictionary class]]) {
       NSError *error;
       NSData *jsonData = [NSJSONSerialization dataWithJSONObject:(NSDictionary *)obj options:kNilOptions error:&error];
-      if (!error && sqlite3_bind_text(stmt, 4, jsonData.bytes, (int)jsonData.length, SQLITE_TRANSIENT) != SQLITE_OK) {
+      if (!error && sqlite3_bind_text(stmt, (int)idx + 1, jsonData.bytes, (int)jsonData.length, SQLITE_TRANSIENT) != SQLITE_OK) {
         [[EXUpdatesAppController sharedInstance] handleErrorWithDomain:kEXUpdatesDatabaseErrorDomain description:@"Could not bind JSON data to SQLite statement" info:nil isFatal:NO];
+        *stop = YES;
+      }
+    } else if ([obj isKindOfClass:[NSNull class]]) {
+      if (sqlite3_bind_null(stmt, (int)idx + 1) != SQLITE_OK) {
+        [[EXUpdatesAppController sharedInstance] handleErrorWithDomain:kEXUpdatesDatabaseErrorDomain description:@"Could not bind null arg to SQLite statement" info:nil isFatal:NO];
         *stop = YES;
       }
     } else {

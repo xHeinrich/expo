@@ -10,12 +10,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addUpdateWithId:(NSUUID *)updateId
              commitTime:(NSNumber *)commitTime
          binaryVersions:(NSString *)binaryVersions
-               metadata:(NSDictionary *)metadata;
+               metadata:(NSDictionary * _Nullable)metadata;
 
 - (void)addAssetWithUrl:(NSString *)url
-                headers:(NSDictionary *)headers
+                headers:(NSDictionary * _Nullable)headers
                    type:(NSString *)type
-               metadata:(NSDictionary *)metadata
+               metadata:(NSDictionary * _Nullable)metadata
            downloadTime:(NSDate *)downloadTime
            relativePath:(NSString *)relativePath
              hashAtomic:(NSString *)hashAtomic

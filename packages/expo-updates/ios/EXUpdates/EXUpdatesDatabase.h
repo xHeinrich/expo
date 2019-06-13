@@ -13,9 +13,14 @@ NS_ASSUME_NONNULL_BEGIN
                metadata:(NSDictionary *)metadata;
 
 - (void)addAssetWithUrl:(NSString *)url
+                headers:(NSDictionary *)headers
+                   type:(NSString *)type
+               metadata:(NSDictionary *)metadata
            downloadTime:(NSDate *)downloadTime
            relativePath:(NSString *)relativePath
-                   hash:(NSString *)hash
+             hashAtomic:(NSString *)hashAtomic
+            hashContent:(NSString *)hashContent
+               hashType:(int)hashType
                updateId:(NSUUID *)updateId
           isLaunchAsset:(BOOL)isLaunchAsset;
 

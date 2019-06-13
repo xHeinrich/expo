@@ -22,6 +22,8 @@ static const int kEXUpdatesDatabaseStatusPending = 2;
 
 @implementation EXUpdatesDatabase
 
+# pragma mark - lifecycle
+
 - (void)openDatabase
 {
   sqlite3 *db;
@@ -104,6 +106,8 @@ static const int kEXUpdatesDatabaseStatusPending = 2;
   };
 }
 
+# pragma mark - insert and update
+
 - (void)addUpdateWithId:(NSUUID *)updateId
              commitTime:(NSNumber *)commitTime
          binaryVersions:(NSString *)binaryVersions
@@ -126,9 +130,14 @@ static const int kEXUpdatesDatabaseStatusPending = 2;
 }
 
 - (void)addAssetWithUrl:(NSString *)url
+                headers:(NSDictionary *)headers
+                   type:(NSString *)type
+               metadata:(NSDictionary *)metadata
            downloadTime:(NSDate *)downloadTime
            relativePath:(NSString *)relativePath
-                   hash:(NSString *)hash
+             hashAtomic:(NSString *)hashAtomic
+            hashContent:(NSString *)hashContent
+               hashType:(int)hashType
                updateId:(NSUUID *)updateId
           isLaunchAsset:(BOOL)isLaunchAsset
 {
@@ -137,13 +146,18 @@ static const int kEXUpdatesDatabaseStatusPending = 2;
     return;
   }
   
-  [self _executeSql:@"INSERT INTO \"assets\" (\"url\", \"download_time\", \"relative_path\", \"hash_atomic\", \"hash_content\" , \"hash_type\")\
+  [self _executeSql:@"INSERT INTO \"assets\" (\"url\", \"headers\", \"type\", \"metadata\", \"download_time\", \"relative_path\", \"hash_atomic\", \"hash_content\" , \"hash_type\")\
    VALUES (?1, ?2, ?3, ?4, ?4, 0);"
            withArgs:@[
                       url,
+                      headers,
+                      type,
+                      metadata,
                       [NSNumber numberWithDouble:[downloadTime timeIntervalSince1970]],
                       relativePath,
-                      hash
+                      hashAtomic,
+                      hashContent,
+                      @(hashType)
                       ]];
 
   NSNumber *rowId = [NSNumber numberWithLongLong:sqlite3_last_insert_rowid(_db)];
@@ -163,6 +177,8 @@ static const int kEXUpdatesDatabaseStatusPending = 2;
                         ]];
   }
 }
+
+# pragma mark - select
 
 - (NSArray <NSDictionary *>*)launchableUpdates
 {
@@ -223,6 +239,8 @@ static const int kEXUpdatesDatabaseStatusPending = 2;
 
   return assets;
 }
+
+# pragma mark - helper methods
 
 - (NSArray <NSDictionary *>* _Nullable)_executeSql:(NSString *)sql withArgs:(NSArray * _Nullable)args
 {

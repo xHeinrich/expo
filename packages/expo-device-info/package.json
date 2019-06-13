@@ -2,9 +2,11 @@
   "name": "expo-device-info",
   "version": "1.0.0",
   "description": "ExpoDeviceInfo standalone module",
-  "main": "build/index.js",
-  "types": "build/index.d.ts",
-  "scripts": {},
+  "main": "build/DeviceInfo.js",
+  "types": "build/DeviceInfo.d.ts",
+  "scripts": {
+    "build": "expo-module build"
+  },
   "keywords": [
     "react-native",
     "expo",

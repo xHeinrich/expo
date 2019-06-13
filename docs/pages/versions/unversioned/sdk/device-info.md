@@ -20,7 +20,7 @@ import { DeviceInfo } from 'expo';
 
 Gets the device brand.
 
-#### `DeviceInfo.freediskstorage: number`
+#### `DeviceInfo.freeDiskStorage: number`
 
 Gets available storage size, in bytes.
 
@@ -36,11 +36,11 @@ Gets the device manufacturer.
 
 Gets the device model.
 
-#### `DeviceInfo.phoneNumber: string`
+#### `DeviceInfo.phoneNumber: string` (Android Only)
 
 Gets the device phone number.
 
-#### `DeviceInfo.serialNumber: string`
+#### `DeviceInfo.serialNumber: string` (Android Only)
 
 Gets the device serial number.
 

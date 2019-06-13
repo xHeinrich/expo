@@ -340,7 +340,7 @@ PODS:
   - ABI33_0_0UMTaskManagerInterface (2.0.0-rc.0)
   - Amplitude-iOS (3.14.1)
   - Analytics (3.6.10)
-  - AppAuth (0.95.1)
+  - AppAuth (0.95.0)
   - Bolts (1.9.0):
     - Bolts/AppLinks (= 1.9.0)
     - Bolts/Tasks (= 1.9.0)
@@ -357,8 +357,8 @@ PODS:
   - CocoaLumberjack/Default (3.2.1)
   - CocoaLumberjack/Extensions (3.2.1):
     - CocoaLumberjack/Default
-  - Crashlytics (3.13.1):
-    - Fabric (~> 1.10.1)
+  - Crashlytics (3.12.0):
+    - Fabric (~> 1.9.0)
   - DoubleConversion (1.1.6)
   - EXAdsAdMob (5.0.0):
     - Google-Mobile-Ads-SDK
@@ -405,6 +405,8 @@ PODS:
     - UMFileSystemInterface
     - UMPermissionsInterface
   - EXCrypto (5.0.0):
+    - UMCore
+  - EXDeviceInfo (1.0.0):
     - UMCore
   - EXDocumentPicker (5.0.0):
     - UMCore
@@ -502,7 +504,7 @@ PODS:
     - UMFileSystemInterface
   - EXWebBrowser (5.0.1):
     - UMCore
-  - Fabric (1.10.1)
+  - Fabric (1.9.0)
   - FBAudienceNetwork (5.1.1)
   - FBSDKCoreKit (4.40.0):
     - Bolts (~> 1.9)
@@ -564,7 +566,7 @@ PODS:
     - GoogleSymbolUtilities (~> 1.1)
   - GTMSessionFetcher/Core (1.2.1)
   - JKBigInteger2 (0.0.5)
-  - lottie-ios (2.5.3)
+  - lottie-ios (2.5.2)
   - React (0.59.8):
     - React/Core (= 0.59.8)
   - React/ART (0.59.8):
@@ -1114,6 +1116,7 @@ DEPENDENCIES:
   - EXConstants (from `../packages/expo-constants/ios`)
   - EXContacts (from `../packages/expo-contacts/ios`)
   - EXCrypto (from `../packages/expo-crypto/ios`)
+  - EXDeviceInfo (from `../packages/expo-device-info/ios`)
   - EXDocumentPicker (from `../packages/expo-document-picker/ios`)
   - EXFacebook (from `../packages/expo-facebook/ios`)
   - EXFaceDetector (from `../packages/expo-face-detector/ios`)
@@ -1552,6 +1555,9 @@ EXTERNAL SOURCES:
   EXCrypto:
     :path: !ruby/object:Pathname
     path: "../packages/expo-crypto/ios"
+  EXDeviceInfo:
+    :path: !ruby/object:Pathname
+    path: "../packages/expo-device-info/ios"
   EXDocumentPicker:
     :path: !ruby/object:Pathname
     path: "../packages/expo-document-picker/ios"
@@ -1827,12 +1833,12 @@ SPEC CHECKSUMS:
   ABI33_0_0UMTaskManagerInterface: 35db2b339eac045288903d65bc25286a1e389d5e
   Amplitude-iOS: 4a3c8807b2ea5369dc11e87e23825bff01e5a922
   Analytics: 63744ad4afa65c3bcdcdb7a94b62515bde5b3900
-  AppAuth: cd34aac431e5c77c46ec7f03935377faa8c5808b
+  AppAuth: 137f6bb6fc9dfbaf2cf9f6fcff1d336ff0163bc6
   Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   Branch: 0d98d22745a9b68bcb4fa6dc1c6a92b64d4fdd7b
   CocoaLumberjack: 2800c03334042fe80589423c8d80e582dcaec482
-  Crashlytics: 5aa8e90dcbf2f34898b4f5a0037787531246cca0
+  Crashlytics: 07fb167b1694128c1c9a5a5cc319b0e9c3ca0933
   DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
   EXAdsAdMob: fb69a1d1b0fbec35f513e1ba54814859d0a5f0b9
   EXAdsFacebook: 4e48bbd9bce73a8ccec1a192d2428dde8a262a0a
@@ -1849,6 +1855,7 @@ SPEC CHECKSUMS:
   EXConstants: f1d63f5bcf9a790fea747ceba6411b7814005191
   EXContacts: cba6db9b4d8ef590c2185711a648fa32d90041b9
   EXCrypto: fdec92b3f9740e1c27858688d3cff33002f1ff44
+  EXDeviceInfo: 50887c49897e60419a7a464d82b92776c5c8db47
   EXDocumentPicker: 03566e97f55139cf76e0a85b2afdb29abb3f46c8
   EXFacebook: 670578e816563084201dc850b91dc2b8b8578189
   EXFaceDetector: 792006f355edf50b24486989688750f16640e553
@@ -1880,7 +1887,7 @@ SPEC CHECKSUMS:
   EXTaskManager: 00fb4f979f079ab32a252997c560e06bdeada952
   EXVideoThumbnails: da67fad3894cbe6bbc82824cc771e84fded3180a
   EXWebBrowser: 7851e76980a3abe7639c069aea965a326197b744
-  Fabric: f6f21452846788bb44595d73e9909d79d328e617
+  Fabric: f988e33c97f08930a413e08123064d2e5f68d655
   FBAudienceNetwork: 56c2dc9b5f075f4a9757d7dc8a83d3972270f645
   FBSDKCoreKit: ae214474b25033399c131dc81d258e412582a2ba
   FBSDKLoginKit: 7a1e411d46acc8834588eca437daf34de42e1d52
@@ -1898,7 +1905,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: 8bbc733218aad26306f9d4a253823986110e3358
   GTMSessionFetcher: 32aeca0aa144acea523e1c8e053089dec2cb98ca
   JKBigInteger2: e91672035c42328c48b7dd015b66812ddf40ca9b
-  lottie-ios: a50d5c0160425cd4b01b852bb9578963e6d92d31
+  lottie-ios: 3fef45d3fabe63e3c7c2eb603dd64ddfffc73062
   React: 76e6aa2b87d05eb6cccb6926d72685c9a07df152
   ReactABI31_0_0: 652618b7156380a24dcd1383aed1155dd4fdd5c4
   ReactABI32_0_0: 82c6098bf1e2733b64b7145abff6a61d72b9af96
@@ -1920,6 +1927,6 @@ SPEC CHECKSUMS:
   yogaABI32_0_0: c1f9c3bc06b5adcc1285e151589f88fc13cf9ef9
   yogaABI33_0_0: aec4e4cfccfd36f11487aa0f2c678fe58ebf77bc
 
-PODFILE CHECKSUM: 991898749c6dcc9e08b48c213c2933afe968c43e
+PODFILE CHECKSUM: bd77b697fc78ff53e5e91ca9ea5a67676723450b
 
 COCOAPODS: 1.6.2

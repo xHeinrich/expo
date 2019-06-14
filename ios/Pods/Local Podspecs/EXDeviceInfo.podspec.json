@@ -1,11 +1,11 @@
 {
   "name": "EXDeviceInfo",
   "version": "1.0.0",
-  "summary": "ExpoDeviceInfo standalone module",
-  "description": "ExpoDeviceInfo standalone module",
+  "summary": "ExpoDevice standalone module",
+  "description": "ExpoDevice standalone module",
   "license": "MIT",
   "authors": "650 Industries, Inc.",
-  "homepage": "https://github.com/expo/expo/tree/master/packages/expo-device-info",
+  "homepage": "https://github.com/expo/expo/tree/master/packages/expo-device",
   "platforms": {
     "ios": "10.0"
   },

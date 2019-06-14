@@ -1,1 +1,0 @@
-../../../../../packages/expo-device-info/ios/EXDeviceInfo/EXDeviceInfoView.h

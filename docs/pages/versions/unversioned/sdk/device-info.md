@@ -102,7 +102,7 @@ DeviceInfo.supportedABIs; // [ "arm64 v8", "Intel x86-64h Haswell", "arm64-v8a",
 ### Methods
 
 - `DeviceInfo.isBatteryChargingAsync()`
-- `DeviceInfo.hasSystemFeatureAsync()` (Android only)
+- `DeviceInfo.hasSystemFeatureAsync(feature)` (Android only)
 - `DeviceInfo.getBatteryLevelAsync()`
 - `DeviceInfo.getIPAddressAsync()`
 - `DeviceInfo.getMACAddressAsync()`

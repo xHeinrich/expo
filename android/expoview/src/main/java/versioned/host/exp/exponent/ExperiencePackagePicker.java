@@ -51,7 +51,7 @@ import expo.modules.sqlite.SQLitePackage;
 import expo.modules.taskManager.TaskManagerPackage;
 import expo.modules.videothumbnails.VideoThumbnailsPackage;
 import expo.modules.webbrowser.WebBrowserPackage;
-import expo.modules.deviceinfo.DeviceInfoPackage;
+import expo.modules.device.DevicePackage;
 
 public class ExperiencePackagePicker {
   private static final List<Package> EXPO_MODULES_PACKAGES = Arrays.<Package>asList(
@@ -100,7 +100,7 @@ public class ExperiencePackagePicker {
       new TaskManagerPackage(),
       new VideoThumbnailsPackage(),
       new WebBrowserPackage(),
-      new DeviceInfoPackage()
+      new DevicePackage()
   );
 
   /**

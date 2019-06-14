@@ -1,5 +1,5 @@
 ---
-title: DeviceInfo
+title: Device
 ---
 
 Provide information of devices on the application.
@@ -11,76 +11,76 @@ This API is pre-installed in [managed](../../introduction/managed-vs-bare/#manag
 ## API (TODO)
 
 ```js
-import { DeviceInfo } from 'expo';
+import { Device } from 'expo';
 ```
 
 ### Constants
 
-#### `DeviceInfo.brand: string`
+#### `Device.brand: string`
 
 Gets the device brand.
 
-#### `DeviceInfo.freeDiskStorage: number`
+#### `Device.freeDiskStorage: number`
 
 Gets available storage size, in bytes.
 
-#### `DeviceInfo.carrier: string`
+#### `Device.carrier: string`
 
 Gets the carrier name (network operator).
 
-#### `DeviceInfo.manufacturer: string`
+#### `Device.manufacturer: string`
 
 Gets the device manufacturer.
 
-#### `DeviceInfo.model: string`
+#### `Device.model: string`
 
 Gets the device model.
 
-#### `DeviceInfo.phoneNumber: string` (Android Only)
+#### `Device.phoneNumber: string` (Android Only)
 
 Gets the device phone number.
 
-#### `DeviceInfo.serialNumber: string` (Android Only)
+#### `Device.serialNumber: string` (Android Only)
 
 Gets the device serial number.
 
-#### `DeviceInfo.systemName: string`
+#### `Device.systemName: string`
 
 Gets the device OS name.
 
-#### `DeviceInfo.deviceId: string`
+#### `Device.deviceId: string`
 
 Gets the device ID.
 
-#### `DeviceInfo.totalDiskCapacity: number`
+#### `Device.totalDiskCapacity: number`
 
 Gets full disk storage size, in bytes.
 
-#### `DeviceInfo.totalMemory: number`
+#### `Device.totalMemory: number`
 
 Gets the device total memory, in bytes.
 
-#### `DeviceInfo.uniqueId: string`
+#### `Device.uniqueId: string`
 
 Gets the device unique ID.
 
-#### `DeviceInfo.userAgent: string`
+#### `Device.userAgent: string`
 
 Gets the device User Agent.
 
-#### `DeviceInfo.isEmulator: boolean`
+#### `Device.isEmulator: boolean`
 
 Tells if the application is running in an emulator.
 
-#### `DeviceInfo.isTablet: boolean`
+#### `Device.isTablet: boolean`
 
 Tells if the device is a tablet.
 
-#### `DeviceInfo.hasNotch: boolean`
+#### `Device.hasNotch: boolean`
 
 Tells if the device has a notch.
 
-#### `DeviceInfo.deviceType: string`
+#### `Device.deviceType: string`
 
 Returns the device's type as a string, which will be one of:
 
@@ -89,26 +89,26 @@ Returns the device's type as a string, which will be one of:
 - `Tv`
 - `Unknown`
 
-#### `DeviceInfo.supportedABIs: string[]`
+#### `Device.supportedABIs: string[]`
 
 Returns a list of supported processor architecture version
 
 **Examples**
 
 ```js
-DeviceInfo.supportedABIs; // [ "arm64 v8", "Intel x86-64h Haswell", "arm64-v8a", "armeabi-v7a", "armeabi" ]
+Device.supportedABIs; // [ "arm64 v8", "Intel x86-64h Haswell", "arm64-v8a", "armeabi-v7a", "armeabi" ]
 ```
 
 ### Methods
 
-- `DeviceInfo.isBatteryChargingAsync()`
-- `DeviceInfo.hasSystemFeatureAsync(feature)` (Android only)
-- `DeviceInfo.getBatteryLevelAsync()`
-- `DeviceInfo.getIPAddressAsync()`
-- `DeviceInfo.getMACAddressAsync()`
-- `DeviceInfo.getPowerStateAsync()` (IOS only)
-- `DeviceInfo.isAirplaneModeAsync()` (Android only)
-- `DeviceInfo.isPinOrFingerprintSet()` 
+- `Device.isBatteryChargingAsync()`
+- `Device.hasSystemFeatureAsync(feature)` (Android only)
+- `Device.getBatteryLevelAsync()`
+- `Device.getIPAddressAsync()`
+- `Device.getMACAddressAsync()`
+- `Device.getPowerStateAsync()` (IOS only)
+- `Device.isAirplaneModeAsync()` (Android only)
+- `Device.isPinOrFingerprintSet()` 
 
 ### Errors
 
@@ -116,7 +116,7 @@ DeviceInfo.supportedABIs; // [ "arm64 v8", "Intel x86-64h Haswell", "arm64-v8a",
 
 ## Methods
 
-### `DeviceInfo.getBatteryLevelAsync()`
+### `Device.getBatteryLevelAsync()`
 
 Get the battery level of the device as a float between 0 and 1.
 
@@ -127,12 +127,12 @@ A Promise that resolves to a float representing the battery level.
 **Examples**
 
 ```js
-DeviceInfo.getBatteryLevelAsync().then(batteryLevel => {
+Device.getBatteryLevelAsync().then(batteryLevel => {
   // 0.759999
 });
 ```
 
-### `DeviceInfo.getIPAddressAsync()`
+### `Device.getIPAddressAsync()`
 
 Gets the device current IP address.
 
@@ -143,12 +143,12 @@ A Promise that resolves to a string of IP address.
 **Examples**
 
 ```js
-DeviceInfo.getIPAddress().then(ip => {
+Device.getIPAddress().then(ip => {
   // "92.168.32.44"
 });
 ```
 
-### `DeviceInfo.getMACAddressAsync()`
+### `Device.getMACAddressAsync()`
 
 Gets the network adapter MAC address.
 
@@ -159,12 +159,12 @@ A Promise that resolves to a string of the network adapter MAC address.
 **Examples**
 
 ```js
-DeviceInfo.getMACAddress().then(mac => {
+Device.getMACAddress().then(mac => {
   // "E5:12:D8:E5:69:97"
 });
 ```
 
-### `DeviceInfo.getPowerStateAsync()` (IOS only)
+### `Device.getPowerStateAsync()` (IOS only)
 
 Gets the power state of the device including the battery level, whether it is plugged in, and if the system is currently operating in low power mode. Displays a warning on iOS if battery monitoring not enabled, or if attempted on an emulator (where monitoring is not possible)
 
@@ -182,7 +182,7 @@ Returns a promise with an object with the following fields:
 **Examples**
 
 ```js
-DeviceInfo.getPowerState().then(state => {
+Device.getPowerState().then(state => {
   // {
   //   batteryLevel: 0.759999,
   //   batteryState: 'unplugged',
@@ -191,7 +191,7 @@ DeviceInfo.getPowerState().then(state => {
 });
 ```
 
-### `DeviceInfo.isAirplaneModeAsync()` (Android Only)
+### `Device.isAirplaneModeAsync()` (Android Only)
 
 Tells if the device is in AirPlaneMode.
 
@@ -202,12 +202,12 @@ Returns a `Promise<boolean>` that resolves to the `boolean` value for whether th
 **Examples**
 
 ```js
-DeviceInfo.isAirPlaneModeAsync().then(airPlaneModeOn => {
+Device.isAirPlaneModeAsync().then(airPlaneModeOn => {
   // false
 });
 ```
 
-### `DeviceInfo.isBatteryChargingAsync()`
+### `Device.isBatteryChargingAsync()`
 
 Tells if the battery is currently charging.
 
@@ -218,12 +218,12 @@ Returns a `Promise<boolean>` that resolves the `boolean` value for whether the d
 **Examples**
 
 ```js
-DeviceInfo.isBatteryChargingAsync().then(isCharging => {
+Device.isBatteryChargingAsync().then(isCharging => {
   // true or false
 });
 ```
 
-### `DeviceInfo.hasSystemFeatureAsync(feature)` (Android Only)
+### `Device.hasSystemFeatureAsync(feature)` (Android Only)
 
 Tells if the device has a specific system feature.
 
@@ -238,12 +238,12 @@ Returns a `Promise<boolean>` that resolves the `boolean` value for whether the d
 **Examples**
 
 ```js
-DeviceInfo.hasSystemFeature('amazon.hardware.fire_tv').then(hasFeature => {
+Device.hasSystemFeature('amazon.hardware.fire_tv').then(hasFeature => {
   // true or false
 }); 
 ```
 
-### `DeviceInfo.isPinOrFingerprintSet()`
+### `Device.isPinOrFingerprintSet()`
 
 Tells if a PIN number or a fingerprint was set for the device.
 
@@ -253,7 +253,7 @@ Returns a `(callback)boolean`.
 **Examples**
 
 ```js
-DeviceInfo.isPinOrFingerprintSet()(isPinOrFingerprintSet => {
+Device.isPinOrFingerprintSet()(isPinOrFingerprintSet => {
   if (!isPinOrFingerprintSet) {
     // ...
   }

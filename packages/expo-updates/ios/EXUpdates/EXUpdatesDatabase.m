@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-static NSString* kEXUpdatesDatabaseErrorDomain = @"Database";
+static NSString* kEXUpdatesDatabaseErrorDomain = @"EXUpdatesDatabase";
 static NSString* kEXUpdatesDatabaseFilename = @"updates.db";
 
 static const int kEXUpdatesDatabaseStatusFailed = 0;

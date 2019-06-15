@@ -17,6 +17,6 @@ public class DevicePackage extends BasePackage {
 
   @Override
   public List<ViewManager> createViewManagers(Context context) {
-    return Collections.singletonList((ViewManager) new DevicesViewManager());
+    return Collections.singletonList((ViewManager) new DeviceViewManager());
   }
 }

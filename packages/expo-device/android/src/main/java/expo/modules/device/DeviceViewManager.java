@@ -9,7 +9,7 @@ import org.unimodules.core.ModuleRegistry;
 import org.unimodules.core.ViewManager;
 import org.unimodules.core.interfaces.RegistryLifecycleListener;
 
-public class DevicesViewManager extends ViewManager<DeviceView> implements RegistryLifecycleListener {
+public class DeviceViewManager extends ViewManager<DeviceView> implements RegistryLifecycleListener {
   private static final String TAG = "ExpoDeviceView";
 
   private ModuleRegistry mModuleRegistry;

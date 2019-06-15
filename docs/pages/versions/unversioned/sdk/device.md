@@ -68,10 +68,6 @@ Gets the device unique ID.
 
 Gets the device User Agent.
 
-#### `Device.isEmulator: boolean`
-
-Tells if the application is running in an emulator.
-
 #### `Device.isTablet: boolean`
 
 Tells if the device is a tablet.
@@ -143,7 +139,7 @@ A Promise that resolves to a string of IP address.
 **Examples**
 
 ```js
-Device.getIPAddress().then(ip => {
+Device.getIPAddressAsync().then(ip => {
   // "92.168.32.44"
 });
 ```
@@ -159,7 +155,7 @@ A Promise that resolves to a string of the network adapter MAC address.
 **Examples**
 
 ```js
-Device.getMACAddress().then(mac => {
+Device.getMACAddressAsync().then(mac => {
   // "E5:12:D8:E5:69:97"
 });
 ```
@@ -182,7 +178,7 @@ Returns a promise with an object with the following fields:
 **Examples**
 
 ```js
-Device.getPowerState().then(state => {
+Device.getPowerStateAsync().then(state => {
   // {
   //   batteryLevel: 0.759999,
   //   batteryState: 'unplugged',
@@ -238,7 +234,7 @@ Returns a `Promise<boolean>` that resolves the `boolean` value for whether the d
 **Examples**
 
 ```js
-Device.hasSystemFeature('amazon.hardware.fire_tv').then(hasFeature => {
+Device.hasSystemFeatureAsync('amazon.hardware.fire_tv').then(hasFeature => {
   // true or false
 }); 
 ```

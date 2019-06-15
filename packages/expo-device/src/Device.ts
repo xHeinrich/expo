@@ -50,5 +50,5 @@ export function isPinOrFingerprintSet(): isPinOrFingerprintSetCallback {
 }
 
 export async function hasSystemFeatureAsync(feature: string): Promise<boolean> {
-  return ExpoDevice.hasSystemFeatureAsync(feature);
+  return await ExpoDevice.hasSystemFeatureAsync(feature);
 }

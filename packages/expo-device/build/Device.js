@@ -1,5 +1,5 @@
 import ExpoDevice from './ExpoDevice';
-export { default as ExpoDeviceView } from './ExpoDeviceView';
+export { default as ExpoDeviceInfoView } from './ExpoDeviceView';
 export const brand = ExpoDevice.brand;
 export const freeDiskStorage = ExpoDevice.freeDiskStorage;
 export const carrier = ExpoDevice.carrier;
@@ -8,7 +8,6 @@ export const model = ExpoDevice.model;
 export const phoneNumber = ExpoDevice.phoneNumber;
 export const serialNumber = ExpoDevice.serialNumber;
 export const systemName = ExpoDevice.systemName;
-export const totalDiskCapacity = ExpoDevice.totalDiskCapacity;
 export const totalMemory = ExpoDevice.totalMemory;
 export const uniqueId = ExpoDevice.uniqueId;
 export const userAgent = ExpoDevice.userAgent;
@@ -41,4 +40,4 @@ export function isPinOrFingerprintSet() {
 export async function hasSystemFeatureAsync(feature) {
   return await ExpoDevice.hasSystemFeatureAsync(feature);
 }
-//# sourceMappingURL=DeviceInfo.js.map
+//# sourceMappingURL=Device.js.map

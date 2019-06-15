@@ -1,0 +1,1 @@
+{"version":3,"file":"Device.types.js","sourceRoot":"","sources":["../src/Device.types.ts"],"names":[],"mappings":"","sourcesContent":["export type PowerState = {\n    batteryLevel?: number;\n    batteryState?: string;\n    lowPowerMode?: boolean;\n};\nexport type isPinOrFingerprintSetCallback = (isPinOrFingerprintSet: boolean) => void"]}

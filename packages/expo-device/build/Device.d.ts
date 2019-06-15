@@ -1,5 +1,5 @@
 import { PowerState, isPinOrFingerprintSetCallback } from './Device.types';
-export { default as ExpoDeviceView } from './ExpoDeviceView';
+export { default as ExpoDeviceInfoView } from './ExpoDeviceView';
 export declare const brand: any;
 export declare const freeDiskStorage: any;
 export declare const carrier: any;
@@ -8,7 +8,6 @@ export declare const model: any;
 export declare const phoneNumber: any;
 export declare const serialNumber: any;
 export declare const systemName: any;
-export declare const totalDiskCapacity: any;
 export declare const totalMemory: any;
 export declare const uniqueId: any;
 export declare const userAgent: any;

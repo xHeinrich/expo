@@ -4,3 +4,7 @@ export declare type PowerState = {
     lowPowerMode?: boolean;
 };
 export declare type isPinOrFingerprintSetCallback = (isPinOrFingerprintSet: boolean) => void;
+export declare const devicesWithNotch: {
+    brand: string;
+    model: string;
+}[];

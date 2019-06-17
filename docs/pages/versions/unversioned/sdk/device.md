@@ -4,7 +4,7 @@ title: Device
 
 Provide information of devices on the application.
 
-## Installation 
+## Installation
 
 This API is pre-installed in [managed](../../introduction/managed-vs-bare/#managed-workflow) apps. It is not yet available for [bare](../../introduction/managed-vs-bare/#bare-workflow) React Native apps.
 
@@ -72,10 +72,6 @@ Gets the device User Agent.
 
 Tells if the device is a tablet.
 
-#### `Device.hasNotch: boolean`
-
-Tells if the device has a notch.
-
 #### `Device.deviceType: string`
 
 Returns the device's type as a string, which will be one of:
@@ -97,6 +93,7 @@ Device.supportedABIs; // [ "arm64 v8", "Intel x86-64h Haswell", "arm64-v8a", "ar
 
 ### Methods
 
+- `Device.hasNotch()`
 - `Device.isBatteryChargingAsync()`
 - `Device.hasSystemFeatureAsync(feature)` (Android only)
 - `Device.getBatteryLevelAsync()`
@@ -104,13 +101,28 @@ Device.supportedABIs; // [ "arm64 v8", "Intel x86-64h Haswell", "arm64-v8a", "ar
 - `Device.getMACAddressAsync()`
 - `Device.getPowerStateAsync()` (IOS only)
 - `Device.isAirplaneModeAsync()` (Android only)
-- `Device.isPinOrFingerprintSet()` 
+- `Device.isPinOrFingerprintSet()`
 
 ### Errors
 
 - [Error Codes](#error-codes)
 
 ## Methods
+
+### `Device.hasNotch()`
+
+Tells if the device has a notch.
+
+#### Returns
+
+A boolean that represents the support for notch display.
+
+**Examples**
+
+```js
+const hasNotch = Device.hasNotch();
+```
+
 
 ### `Device.getBatteryLevelAsync()`
 
@@ -174,7 +186,6 @@ Returns a promise with an object with the following fields:
 
 - **lowPowerMode (_string_)** -- `true` if lowPowerMode is on, `false` if lowPowerMode is off.
 
-
 **Examples**
 
 ```js
@@ -191,7 +202,7 @@ Device.getPowerStateAsync().then(state => {
 
 Tells if the device is in AirPlaneMode.
 
-#### Returns 
+#### Returns
 
 Returns a `Promise<boolean>` that resolves to the `boolean` value for whether the device is in airplane mode or not.
 
@@ -207,7 +218,7 @@ Device.isAirPlaneModeAsync().then(airPlaneModeOn => {
 
 Tells if the battery is currently charging.
 
-#### Returns 
+#### Returns
 
 Returns a `Promise<boolean>` that resolves the `boolean` value for whether the device is charging or not.
 
@@ -236,14 +247,15 @@ Returns a `Promise<boolean>` that resolves the `boolean` value for whether the d
 ```js
 Device.hasSystemFeatureAsync('amazon.hardware.fire_tv').then(hasFeature => {
   // true or false
-}); 
+});
 ```
 
 ### `Device.isPinOrFingerprintSet()`
 
 Tells if a PIN number or a fingerprint was set for the device.
 
-#### Returns 
+#### Returns
+
 Returns a `(callback)boolean`.
 
 **Examples**
@@ -255,7 +267,6 @@ Device.isPinOrFingerprintSet()(isPinOrFingerprintSet => {
   }
 });
 ```
-
 
 #### Error Codes
 
@@ -272,4 +283,3 @@ A [subscription object](https://github.com/expo/expo/blob/master/packages/expo-r
 | --------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
 | ERR_SCREEN_ORIENTATION_UNSUPPORTED_ORIENTATION_LOCK | The platform does not support the [`OrientationLock`](#screenorientationorientationlock) policy. |
 | ERR_SCREEN_ORIENTATION_INVALID_ORIENTATION_LOCK     | An invalid [`OrientationLock`](#screenorientationorientationlock) was passed in.                 |
-

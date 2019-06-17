@@ -1,6 +1,6 @@
 import ExpoDevice from './ExpoDevice';
 
-import { PowerState, isPinOrFingerprintSetCallback } from './Device.types';
+import { PowerState, isPinOrFingerprintSetCallback, devicesWithNotch } from './Device.types';
 
 export { default as ExpoDeviceInfoView } from './ExpoDeviceView';
 
@@ -15,12 +15,20 @@ export const systemName = ExpoDevice.systemName;
 export const totalMemory = ExpoDevice.totalMemory;
 export const uniqueId = ExpoDevice.uniqueId;
 export const userAgent = ExpoDevice.userAgent;
-export const isEmulator = ExpoDevice.isEmulator;
 export const isTablet = ExpoDevice.isTablet;
-export const hasNotch = ExpoDevice.hasNotch;
 export const deviceType = ExpoDevice.deviceType;
+export const deviceId = ExpoDevice.deviceId;
+export const totalDiskCapacity = ExpoDevice.totalDiskCapacity;
 export const supportedABIs = ExpoDevice.supportedABIs;
-
+export function hasNotch(): boolean {
+  return (
+    devicesWithNotch.findIndex(
+      item =>
+        item.brand.toLowerCase() === ExpoDevice.brand.toLowerCase() &&
+        item.model.toLowerCase() === ExpoDevice.model
+    ) !== -1
+  );
+}
 export async function getBatteryLevelAsync(): Promise<number> {
   return await ExpoDevice.getBatteryLevelAsync();
 }

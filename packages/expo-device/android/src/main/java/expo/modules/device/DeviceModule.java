@@ -1,5 +1,6 @@
 package expo.modules.device;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -13,6 +14,8 @@ import android.util.Log;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.app.ActivityCompat;
 import android.view.SurfaceHolder.Callback;
 import android.app.KeyguardManager;
 import android.view.View;
@@ -23,10 +26,12 @@ import android.app.UiModeManager;
 import android.view.WindowManager;
 import android.util.DisplayMetrics;
 import android.content.res.Configuration;
+import android.Manifest;
 
 import org.unimodules.core.ExportedModule;
 import org.unimodules.core.ModuleRegistry;
 import org.unimodules.core.Promise;
+import org.unimodules.core.interfaces.ActivityProvider;
 import org.unimodules.core.interfaces.ExpoMethod;
 import org.unimodules.core.interfaces.RegistryLifecycleListener;
 
@@ -44,10 +49,14 @@ import java.util.Map;
 public class DeviceModule extends ExportedModule implements RegistryLifecycleListener {
   private static final String NAME = "ExpoDevice";
   private static final String TAG = DeviceModule.class.getSimpleName();
+  private final int REQUEST_READ_PHONE_STATE = 1;
 
   private ModuleRegistry mModuleRegistry;
   private Context mContext;
   private WifiInfo wifiInfo;
+  private ActivityProvider mActivityProvider;
+  private Activity mActivity;
+  private String mPhoneNumber;
   DeviceType deviceType;
 
   public DeviceModule(Context context) {
@@ -57,10 +66,10 @@ public class DeviceModule extends ExportedModule implements RegistryLifecycleLis
   }
 
   public enum DeviceType {
-    HANDSET ("Handset"),
-    TABLET ("Tablet"),
-    TV ("Tv"),
-    UNKNOWN ("Unknown");
+    HANDSET("Handset"),
+    TABLET("Tablet"),
+    TV("Tv"),
+    UNKNOWN("Unknown");
 
     private final String value;
 
@@ -90,8 +99,28 @@ public class DeviceModule extends ExportedModule implements RegistryLifecycleLis
   @Override
   public void onCreate(ModuleRegistry moduleRegistry) {
     mModuleRegistry = moduleRegistry;
+    mActivityProvider = moduleRegistry.getModule(ActivityProvider.class);
+    mActivity = mActivityProvider.getCurrentActivity();
+    mPhoneNumber = getPhoneNumber();
   }
 
+  public void onRequestPermissionsResult(int requestCode,
+                                         String[] permissions, int[] grantResults) {
+    switch (requestCode) {
+      case REQUEST_READ_PHONE_STATE: {
+        // If request is cancelled, the result arrays are empty.
+        if (grantResults.length > 0
+            && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            mPhoneNumber = getPhoneNumber();
+        } else {
+          // permission denied, boo! Disable the
+          // functionality that depends on this permission.
+          mPhoneNumber = "No permission granted to get phone number";
+        }
+        return;
+      }
+    }
+  }
 
   @Override
   public Map<String, Object> getConstants() {
@@ -111,7 +140,8 @@ public class DeviceModule extends ExportedModule implements RegistryLifecycleLis
     constants.putString("carrier", this.getCarrier());
     constants.putString("manufacturer", Build.MANUFACTURER);
     constants.putString("model", Build.MODEL);
-    constants.putString("phoneNumber", getPhoneNumber());
+    mPhoneNumber = this.getPhoneNumber();
+    constants.putString("phoneNumber", mPhoneNumber);
     constants.putString("serialNumber", Build.SERIAL);
     constants.putString("systemName", "Android");
     constants.putString("deviceId", Build.BOARD);
@@ -127,12 +157,11 @@ public class DeviceModule extends ExportedModule implements RegistryLifecycleLis
     actMgr.getMemoryInfo(memInfo);
     constants.putLong("totalMemory", memInfo.totalMem);
 
-    try{
+    try {
       constants.putLong("freeDiskStorage", this.getFreeDiskStorage().longValue());
-    }
-    catch(NullPointerException e){
+    } catch (NullPointerException e) {
       e.printStackTrace();
-      constants.putLong("freeDiskStorage", (Long)null);
+      constants.putLong("freeDiskStorage", (Long) null);
     }
 
     return constants;
@@ -160,11 +189,17 @@ public class DeviceModule extends ExportedModule implements RegistryLifecycleLis
   }
 
   private String getPhoneNumber() {
-    try{
-      TelephonyManager telMgr = (TelephonyManager) mContext.getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-      return telMgr.getLine1Number();
-    }
-    catch(SecurityException se){
+    try {
+      int permissionCheck = ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE);
+
+      if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_READ_PHONE_STATE);
+
+      } else {
+        TelephonyManager telMgr = (TelephonyManager) mContext.getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+        return telMgr.getLine1Number();
+      }
+    } catch (SecurityException se) {
       Log.e(TAG, se.getMessage());
     }
     return null;
@@ -180,7 +215,7 @@ public class DeviceModule extends ExportedModule implements RegistryLifecycleLis
     return null;
   }
 
-  private static DeviceType getDeviceType(Context context){
+  private static DeviceType getDeviceType(Context context) {
     // Detect TVs via ui mode (Android TVs) or system features (Fire TV).
     if (context.getApplicationContext().getPackageManager().hasSystemFeature("amazon.hardware.fire_tv")) {
       return DeviceType.TV;
@@ -223,10 +258,9 @@ public class DeviceModule extends ExportedModule implements RegistryLifecycleLis
     }
   }
 
-  private boolean isTablet(){
+  private boolean isTablet() {
     return deviceType.getValue() == "Tablet";
   }
-
 
   @ExpoMethod
   public void getBatteryLevelAsync(Promise promise) {
@@ -239,7 +273,7 @@ public class DeviceModule extends ExportedModule implements RegistryLifecycleLis
 
   @ExpoMethod
   public void getIPAddressAsync(Promise promise) {
-    try{
+    try {
       Integer ipAddress = getWifiInfo().getIpAddress();
       // Convert little-endian to big-endianif needed
       if (ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN)) {
@@ -256,8 +290,7 @@ public class DeviceModule extends ExportedModule implements RegistryLifecycleLis
         ipAddressString = null;
       }
       promise.resolve(ipAddressString);
-    }
-    catch(Exception e){
+    } catch (Exception e) {
       Log.e(TAG, e.getMessage());
       promise.reject(e);
     }
@@ -304,7 +337,7 @@ public class DeviceModule extends ExportedModule implements RegistryLifecycleLis
   public void isAirplaneModeAsync(Promise promise) {
     boolean isAirPlaneMode;
 
-    isAirPlaneMode = Settings.Global.getInt(mContext.getContentResolver(),Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
+    isAirPlaneMode = Settings.Global.getInt(mContext.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
 
     promise.resolve(isAirPlaneMode);
   }

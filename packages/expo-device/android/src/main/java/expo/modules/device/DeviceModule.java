@@ -104,6 +104,10 @@ public class DeviceModule extends ExportedModule implements RegistryLifecycleLis
     mPhoneNumber = getPhoneNumber();
   }
 
+  public String getEventName() {
+    return "Exponent.isPinOrFingerprintSetUpdate";
+  }
+
   public void onRequestPermissionsResult(int requestCode,
                                          String[] permissions, int[] grantResults) {
     switch (requestCode) {
@@ -111,7 +115,7 @@ public class DeviceModule extends ExportedModule implements RegistryLifecycleLis
         // If request is cancelled, the result arrays are empty.
         if (grantResults.length > 0
             && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            mPhoneNumber = getPhoneNumber();
+          mPhoneNumber = getPhoneNumber();
         } else {
           // permission denied, boo! Disable the
           // functionality that depends on this permission.
@@ -142,7 +146,7 @@ public class DeviceModule extends ExportedModule implements RegistryLifecycleLis
     constants.putString("model", Build.MODEL);
     mPhoneNumber = this.getPhoneNumber();
     constants.putString("phoneNumber", mPhoneNumber);
-    constants.putString("serialNumber", Build.SERIAL);
+    constants.putString("serialNumber", this.getSerial());
     constants.putString("systemName", "Android");
     constants.putString("deviceId", Build.BOARD);
     constants.putLong("totalDiskCapacity", this.getTotalDiskCapacity().longValue());
@@ -184,8 +188,13 @@ public class DeviceModule extends ExportedModule implements RegistryLifecycleLis
   }
 
   private String getCarrier() {
-    TelephonyManager telMgr = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
-    return telMgr.getNetworkOperatorName();
+    try {
+      TelephonyManager telMgr = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
+      return telMgr.getNetworkOperatorName();
+    } catch (NullPointerException e) {
+      Log.e(TAG, e.getMessage());
+    }
+    return null;
   }
 
   private String getPhoneNumber() {
@@ -255,6 +264,26 @@ public class DeviceModule extends ExportedModule implements RegistryLifecycleLis
     } else {
       // Otherwise, we don't know what device type we're on/
       return DeviceType.UNKNOWN;
+    }
+  }
+
+  private String getSerial() {
+    if (android.os.Build.VERSION.SDK_INT < 26) {
+      return Build.SERIAL;
+    } else {
+      try {
+        int permissionCheck = ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE);
+
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+          ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_READ_PHONE_STATE);
+
+        } else {
+          return Build.getSerial();
+        }
+      } catch (SecurityException se) {
+        Log.e(TAG, se.getMessage());
+      }
+      return null;
     }
   }
 
@@ -362,9 +391,9 @@ public class DeviceModule extends ExportedModule implements RegistryLifecycleLis
     promise.resolve(hasFeature);
   }
 
-//  @ExpoMethod
-//  public void isPinOrFingerprintSet(Callback callback) {
-//    KeyguardManager keyguardManager = (KeyguardManager) mContext.getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE); //api 16+
-//    callback.invoke(keyguardManager.isKeyguardSecure());
-//  }
+  @ExpoMethod
+  public void isPinOrFingerprintSet(Promise promise) {
+    KeyguardManager keyguardManager = (KeyguardManager) mContext.getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE); //api 16+
+    promise.resolve(keyguardManager.isKeyguardSecure());
+  }
 }

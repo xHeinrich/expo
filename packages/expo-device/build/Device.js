@@ -1,6 +1,7 @@
 import ExpoDevice from './ExpoDevice';
 import { devicesWithNotch } from './Device.types';
 export { default as ExpoDeviceInfoView } from './ExpoDeviceView';
+import { Platform } from '@unimodules/core';
 export const brand = ExpoDevice.brand;
 export const freeDiskStorage = ExpoDevice.freeDiskStorage;
 export const carrier = ExpoDevice.carrier;
@@ -31,18 +32,33 @@ export async function getMACAddressAsync() {
     return await ExpoDevice.getMACAddressAsync();
 }
 export async function getPowerStateAsync() {
-    return await ExpoDevice.getPowerStateAsync();
+    if (Platform.OS === 'ios') {
+        return await ExpoDevice.getPowerStateAsync();
+    }
+    else {
+        return Promise.reject('This platform does not support this method');
+    }
 }
 export async function isBatteryChargingAsync() {
     return await ExpoDevice.isBatteryChargingAsync();
 }
 export async function isAirplaneModeAsync() {
-    return await ExpoDevice.isAirplaneModeAsync();
+    if (Platform.OS === 'android') {
+        return await ExpoDevice.isAirplaneModeAsync();
+    }
+    else {
+        return Promise.reject('This platform does not support this method');
+    }
+}
+export async function hasSystemFeatureAsync(feature) {
+    if (Platform.OS === 'android') {
+        return await ExpoDevice.hasSystemFeatureAsync(feature);
+    }
+    else {
+        return Promise.reject('This platform does not support this method');
+    }
 }
 export function isPinOrFingerprintSet() {
     return ExpoDevice.isPinOrFingerprintSet();
-}
-export async function hasSystemFeatureAsync(feature) {
-    return await ExpoDevice.hasSystemFeatureAsync(feature);
 }
 //# sourceMappingURL=Device.js.map

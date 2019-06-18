@@ -4,6 +4,8 @@ import { PowerState, isPinOrFingerprintSetCallback, devicesWithNotch } from './D
 
 export { default as ExpoDeviceInfoView } from './ExpoDeviceView';
 
+import { Platform } from '@unimodules/core';
+
 export const brand = ExpoDevice.brand;
 export const freeDiskStorage = ExpoDevice.freeDiskStorage;
 export const carrier = ExpoDevice.carrier;
@@ -41,22 +43,38 @@ export async function getMACAddressAsync(): Promise<string> {
   return await ExpoDevice.getMACAddressAsync();
 }
 
-export async function getPowerStateAsync(): Promise<PowerState> {
-  return await ExpoDevice.getPowerStateAsync();
+export async function getPowerStateAsync(): Promise<PowerState|string> {
+  if(Platform.OS === 'ios'){
+    return await ExpoDevice.getPowerStateAsync();
+  }
+  else{
+    return Promise.reject('This platform does not support this method');
+  }
 }
 
 export async function isBatteryChargingAsync(): Promise<boolean> {
   return await ExpoDevice.isBatteryChargingAsync();
 }
 
-export async function isAirplaneModeAsync(): Promise<boolean> {
-  return await ExpoDevice.isAirplaneModeAsync();
+export async function isAirplaneModeAsync(): Promise<boolean|string> {
+  if(Platform.OS === 'android'){
+    return await ExpoDevice.isAirplaneModeAsync();
+  }
+  else{
+    return Promise.reject('This platform does not support this method');
+  }
 }
 
-export function isPinOrFingerprintSet(): isPinOrFingerprintSetCallback {
+export async function hasSystemFeatureAsync(feature: string): Promise<boolean|string> {
+  if(Platform.OS === 'android'){
+    return await ExpoDevice.hasSystemFeatureAsync(feature);
+  }
+  else{
+    return Promise.reject('This platform does not support this method');
+  }
+}
+
+export function isPinOrFingerprintSet(): Promise<boolean>{
   return ExpoDevice.isPinOrFingerprintSet();
 }
-
-export async function hasSystemFeatureAsync(feature: string): Promise<boolean> {
-  return await ExpoDevice.hasSystemFeatureAsync(feature);
-}
+  

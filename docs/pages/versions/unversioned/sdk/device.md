@@ -8,7 +8,7 @@ Provide information of devices on the application.
 
 This API is pre-installed in [managed](../../introduction/managed-vs-bare/#managed-workflow) apps. It is not yet available for [bare](../../introduction/managed-vs-bare/#bare-workflow) React Native apps.
 
-## API (TODO)
+## API
 
 ```js
 import { Device } from 'expo';
@@ -102,10 +102,6 @@ Device.supportedABIs; // [ "arm64 v8", "Intel x86-64h Haswell", "arm64-v8a", "ar
 - `Device.getPowerStateAsync()` (IOS only)
 - `Device.isAirplaneModeAsync()` (Android only)
 - `Device.isPinOrFingerprintSet()`
-
-### Errors
-
-- [Error Codes](#error-codes)
 
 ## Methods
 
@@ -256,30 +252,13 @@ Tells if a PIN number or a fingerprint was set for the device.
 
 #### Returns
 
-Returns a `(callback)boolean`.
+Returns a `Promise<boolean>` that resolves the `boolean` value for whether the device has set a Pin or Fingerprint.
 
 **Examples**
 
 ```js
 Device.isPinOrFingerprintSet()(isPinOrFingerprintSet => {
-  if (!isPinOrFingerprintSet) {
-    // ...
+    // true or false
   }
 });
 ```
-
-#### Error Codes
-
-- `ERR_SCREEN_ORIENTATION_INVALID_ORIENTATION_LOCK` - an invalid [`OrientationLock`](#screenorientationorientationlock) was passed in.
-- `ERR_SCREEN_ORIENTATION_UNSUPPORTED_ORIENTATION_LOCK` - the platform does not support the orientation lock policy.
-
-### `Subscription`
-
-A [subscription object](https://github.com/expo/expo/blob/master/packages/expo-react-native-adapter/src/EventEmitter.ts#L16).
-
-## Error Codes
-
-| Code                                                | Description                                                                                      |
-| --------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| ERR_SCREEN_ORIENTATION_UNSUPPORTED_ORIENTATION_LOCK | The platform does not support the [`OrientationLock`](#screenorientationorientationlock) policy. |
-| ERR_SCREEN_ORIENTATION_INVALID_ORIENTATION_LOCK     | An invalid [`OrientationLock`](#screenorientationorientationlock) was passed in.                 |

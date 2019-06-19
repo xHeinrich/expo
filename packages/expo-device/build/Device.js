@@ -1,35 +1,13 @@
 import ExpoDevice from './ExpoDevice';
-import { devicesWithNotch, deviceNamesByCode } from './Device.types';
+import { devicesWithNotch, } from './Device.types';
 export { default as ExpoDeviceInfoView } from './ExpoDeviceView';
-import { Platform } from '@unimodules/core';
+import { Platform, EventEmitter } from '@unimodules/core';
+const eventEmitter = new EventEmitter(ExpoDevice);
 export const brand = ExpoDevice.brand;
 export const freeDiskStorage = ExpoDevice.freeDiskStorage;
 export const carrier = ExpoDevice.carrier;
 export const manufacturer = ExpoDevice.manufacturer;
-if (Platform.OS === 'ios') {
-    var modelName;
-    let deviceName;
-    let deviceId = ExpoDevice.deviceId;
-    if (deviceId) {
-        deviceName = deviceNamesByCode[deviceId];
-        if (!deviceName) {
-            // Not found on database. At least guess main device type from string contents:
-            if (deviceId.startsWith('iPod')) {
-                deviceName = 'iPod Touch';
-            } else if (deviceId.startsWith('iPad')) {
-                deviceName = 'iPad';
-            } else if (deviceId.startsWith('iPhone')) {
-                deviceName = 'iPhone';
-            } else if (deviceId.startsWith('AppleTV')) {
-                deviceName = 'Apple TV';
-            }
-        }
-    }
-    modelName = deviceName;
-} else {
-    modelName = ExpoDevice.model
-}
-export const model = modelName;
+export const model = ExpoDevice.model;
 export const phoneNumber = ExpoDevice.phoneNumber;
 export const serialNumber = ExpoDevice.serialNumber;
 export const systemName = ExpoDevice.systemName;
@@ -83,5 +61,14 @@ export async function hasSystemFeatureAsync(feature) {
 }
 export function isPinOrFingerprintSet() {
     return ExpoDevice.isPinOrFingerprintSet();
+}
+export function watchBatteryLevelChange(callback) {
+    return eventEmitter.addListener('Expo.batteryLevelDidChange', callback);
+}
+export function watchBatteryLevelIsLow(callback) {
+    return eventEmitter.addListener('Expo.batteryLevelIsLow', callback);
+}
+export function watchPowerStateDidChange(callback) {
+    return eventEmitter.addListener('Expo.powerStateDidChange', callback);
 }
 //# sourceMappingURL=Device.js.map

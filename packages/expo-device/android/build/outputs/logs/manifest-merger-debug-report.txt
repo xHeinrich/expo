@@ -1,38 +1,58 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:1:1-6:12
-INJECTED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:1:1-6:12
-INJECTED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:1:1-6:12
-INJECTED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:1:1-6:12
-INJECTED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:1:1-6:12
-INJECTED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:1:1-6:12
-INJECTED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:1:1-6:12
+ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:1:1-12:12
+INJECTED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:1:1-12:12
+INJECTED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:1:1-12:12
+INJECTED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:1:1-12:12
+INJECTED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:1:1-12:12
+INJECTED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:1:1-12:12
+INJECTED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:1:1-12:12
 	package
 		ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:1:11-40
 		INJECTED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml
 		INJECTED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml
 	android:versionName
 		INJECTED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml
-		ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:1:1-6:12
+		ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:1:1-12:12
 		INJECTED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml
 	android:versionCode
 		INJECTED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml
-		ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:1:1-6:12
+		ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:1:1-12:12
 		INJECTED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml
 	xmlns:android
 		ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:2:11-69
 uses-permission#android.permission.ACCESS_NETWORK_STATE
-ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:3:5-78
+ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:4:5-78
 	android:name
-		ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:3:22-76
+		ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:4:22-76
 uses-permission#android.permission.ACCESS_WIFI_STATE
-ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:4:5-75
-	android:name
-		ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:4:22-73
-uses-permission#android.permission.CHANGE_WIFI_STATE
-ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:5:5-76
+ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:5:5-75
 	android:name
 		ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:5:22-73
+uses-permission#android.permission.CHANGE_WIFI_STATE
+ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:6:5-75
+	android:name
+		ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:6:22-73
+uses-permission#android.permission.INTERNET
+ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:7:5-66
+	android:name
+		ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:7:22-64
+uses-permission#android.permission.READ_SMS
+ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:8:5-66
+	android:name
+		ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:8:22-64
+uses-permission#android.permission.READ_PHONE_STATE
+ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:9:5-74
+	android:name
+		ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:9:22-72
+uses-permission#android.permission.READ_PHONE_NUMBERS
+ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:10:5-76
+	android:name
+		ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:10:22-74
+uses-permission#android.Manifest.permission.READ_PHONE_STATE
+ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:11:5-84
+	android:name
+		ADDED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml:11:22-81
 uses-sdk
 INJECTED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /Users/vivianzzhu/Desktop/expo/packages/expo-device/android/src/main/AndroidManifest.xml

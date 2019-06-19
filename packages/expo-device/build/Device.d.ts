@@ -1,5 +1,8 @@
-import { PowerState, isPinOrFingerprintSetCallback } from './Device.types';
+import { PowerState, deviceBatteryUpdateCallback, devicePowerStateUpdate } from './Device.types';
 export { default as ExpoDeviceInfoView } from './ExpoDeviceView';
+export interface deviceListener {
+    remove: () => void;
+}
 export declare const brand: any;
 export declare const freeDiskStorage: any;
 export declare const carrier: any;
@@ -20,8 +23,11 @@ export declare function hasNotch(): boolean;
 export declare function getBatteryLevelAsync(): Promise<number>;
 export declare function getIPAddressAsync(): Promise<string>;
 export declare function getMACAddressAsync(): Promise<string>;
-export declare function getPowerStateAsync(): Promise<PowerState>;
+export declare function getPowerStateAsync(): Promise<PowerState | string>;
 export declare function isBatteryChargingAsync(): Promise<boolean>;
-export declare function isAirplaneModeAsync(): Promise<boolean>;
-export declare function isPinOrFingerprintSet(): isPinOrFingerprintSetCallback;
-export declare function hasSystemFeatureAsync(feature: string): Promise<boolean>;
+export declare function isAirplaneModeAsync(): Promise<boolean | string>;
+export declare function hasSystemFeatureAsync(feature: string): Promise<boolean | string>;
+export declare function isPinOrFingerprintSet(): Promise<boolean>;
+export declare function watchBatteryLevelChange(callback: deviceBatteryUpdateCallback): deviceListener;
+export declare function watchBatteryLevelIsLow(callback: deviceBatteryUpdateCallback): deviceListener;
+export declare function watchPowerStateDidChange(callback: devicePowerStateUpdate): deviceListener;

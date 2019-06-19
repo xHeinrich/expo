@@ -17,18 +17,22 @@ if (Platform.OS === 'ios') {
             // Not found on database. At least guess main device type from string contents:
             if (deviceId.startsWith('iPod')) {
                 deviceName = 'iPod Touch';
-            } else if (deviceId.startsWith('iPad')) {
+            }
+            else if (deviceId.startsWith('iPad')) {
                 deviceName = 'iPad';
-            } else if (deviceId.startsWith('iPhone')) {
+            }
+            else if (deviceId.startsWith('iPhone')) {
                 deviceName = 'iPhone';
-            } else if (deviceId.startsWith('AppleTV')) {
+            }
+            else if (deviceId.startsWith('AppleTV')) {
                 deviceName = 'Apple TV';
             }
         }
     }
     modelName = deviceName;
-} else {
-    modelName = ExpoDevice.model
+}
+else {
+    modelName = ExpoDevice.model;
 }
 export const model = modelName;
 export const phoneNumber = ExpoDevice.phoneNumber;
@@ -44,7 +48,7 @@ export const totalDiskCapacity = ExpoDevice.totalDiskCapacity;
 export const supportedABIs = ExpoDevice.supportedABIs;
 export function hasNotch() {
     return (devicesWithNotch.findIndex(item => item.brand.toLowerCase() === ExpoDevice.brand.toLowerCase() &&
-        item.model.toLowerCase() === ExpoDevice.model) !== -1);
+        item.model.toLowerCase() === ((Platform.OS === 'ios') ? modelName.toLowerCase() : ExpoDevice.model.toLowerCase())) !== -1);
 }
 export async function getBatteryLevelAsync() {
     return await ExpoDevice.getBatteryLevelAsync();

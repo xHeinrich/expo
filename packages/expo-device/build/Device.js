@@ -59,8 +59,8 @@ export async function hasSystemFeatureAsync(feature) {
         return Promise.reject('This platform does not support this method');
     }
 }
-export function isPinOrFingerprintSet() {
-    return ExpoDevice.isPinOrFingerprintSet();
+export async function isPinOrFingerprintSetAsync() {
+    return await ExpoDevice.isPinOrFingerprintSetAsync();
 }
 export function watchBatteryLevelChange(callback) {
     return eventEmitter.addListener('Expo.batteryLevelDidChange', callback);

@@ -82,13 +82,8 @@ export async function hasSystemFeatureAsync(feature: string): Promise<boolean | 
   }
 }
 
-<<<<<<< HEAD
 export async function isPinOrFingerprintSetAsync(): Promise<boolean>{
-  return ExpoDevice.isPinOrFingerprintSetAsync();
-=======
-export function isPinOrFingerprintSet(): Promise<boolean> {
-  return ExpoDevice.isPinOrFingerprintSet();
->>>>>>> add three event listeners
+  return await ExpoDevice.isPinOrFingerprintSetAsync();
 }
 
 export function watchBatteryLevelChange(callback: deviceBatteryUpdateCallback): deviceListener {

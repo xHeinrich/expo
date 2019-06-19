@@ -180,16 +180,16 @@ UM_EXPORT_METHOD_AS(getIPAddressAsync,
   resolve(address);
 }
 
-//UM_EXPORT_METHOD_AS(isPinOrFingerprintSet, isPinOrFingerprintSet:(UMResponseSenderBlock)callback)
-//{
-//#if TARGET_OS_TV
-//  BOOL isPinOrFingerprintSet = false;
-//#else
-//  LAContext *context = [[LAContext alloc] init];
-//  BOOL isPinOrFingerprintSet = ([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthentication error:nil]);
-//#endif
-//  callback(@[[NSNumber numberWithBool:isPinOrFingerprintSet]]);
-//}
+UM_EXPORT_METHOD_AS(isPinOrFingerprintSetAsync, isPinOrFingerprintSetAsyncWithResolver:(UMPromiseResolveBlock)resolve rejecter:(UMPromiseRejectBlock)reject)
+{
+#if TARGET_OS_TV
+  BOOL isPinOrFingerprintSet = false;
+#else
+  LAContext *context = [[LAContext alloc] init];
+  BOOL isPinOrFingerprintSet = ([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthentication error:nil]);
+#endif
+  resolve(@[[NSNumber numberWithBool:isPinOrFingerprintSet]]);
+}
 
 - (NSString*) deviceId
 {

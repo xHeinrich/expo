@@ -74,7 +74,7 @@ export async function hasSystemFeatureAsync(feature: string): Promise<boolean|st
   }
 }
 
-export function isPinOrFingerprintSet(): Promise<boolean>{
-  return ExpoDevice.isPinOrFingerprintSet();
+export async function isPinOrFingerprintSetAsync(): Promise<boolean>{
+  return ExpoDevice.isPinOrFingerprintSetAsync();
 }
   

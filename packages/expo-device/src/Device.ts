@@ -1,10 +1,21 @@
 import ExpoDevice from './ExpoDevice';
 
-import { PowerState, isPinOrFingerprintSetCallback, devicesWithNotch } from './Device.types';
+import {
+  PowerState,
+  isPinOrFingerprintSetCallback,
+  devicesWithNotch,
+  deviceBatteryUpdateCallback,
+  devicePowerStateUpdate,
+} from './Device.types';
 
 export { default as ExpoDeviceInfoView } from './ExpoDeviceView';
 
-import { Platform } from '@unimodules/core';
+import { Platform, EventEmitter } from '@unimodules/core';
+
+const eventEmitter = new EventEmitter(ExpoDevice);
+export interface deviceListener {
+  remove: () => void;
+}
 
 export const brand = ExpoDevice.brand;
 export const freeDiskStorage = ExpoDevice.freeDiskStorage;
@@ -43,11 +54,10 @@ export async function getMACAddressAsync(): Promise<string> {
   return await ExpoDevice.getMACAddressAsync();
 }
 
-export async function getPowerStateAsync(): Promise<PowerState|string> {
-  if(Platform.OS === 'ios'){
+export async function getPowerStateAsync(): Promise<PowerState | string> {
+  if (Platform.OS === 'ios') {
     return await ExpoDevice.getPowerStateAsync();
-  }
-  else{
+  } else {
     return Promise.reject('This platform does not support this method');
   }
 }
@@ -56,25 +66,39 @@ export async function isBatteryChargingAsync(): Promise<boolean> {
   return await ExpoDevice.isBatteryChargingAsync();
 }
 
-export async function isAirplaneModeAsync(): Promise<boolean|string> {
-  if(Platform.OS === 'android'){
+export async function isAirplaneModeAsync(): Promise<boolean | string> {
+  if (Platform.OS === 'android') {
     return await ExpoDevice.isAirplaneModeAsync();
-  }
-  else{
+  } else {
     return Promise.reject('This platform does not support this method');
   }
 }
 
-export async function hasSystemFeatureAsync(feature: string): Promise<boolean|string> {
-  if(Platform.OS === 'android'){
+export async function hasSystemFeatureAsync(feature: string): Promise<boolean | string> {
+  if (Platform.OS === 'android') {
     return await ExpoDevice.hasSystemFeatureAsync(feature);
-  }
-  else{
+  } else {
     return Promise.reject('This platform does not support this method');
   }
 }
 
+<<<<<<< HEAD
 export async function isPinOrFingerprintSetAsync(): Promise<boolean>{
   return ExpoDevice.isPinOrFingerprintSetAsync();
+=======
+export function isPinOrFingerprintSet(): Promise<boolean> {
+  return ExpoDevice.isPinOrFingerprintSet();
+>>>>>>> add three event listeners
 }
-  
+
+export function watchBatteryLevelChange(callback: deviceBatteryUpdateCallback): deviceListener {
+  return eventEmitter.addListener('Expo.batteryLevelDidChange', callback);
+}
+
+export function watchBatteryLevelIsLow(callback: deviceBatteryUpdateCallback): deviceListener {
+  return eventEmitter.addListener('Expo.batteryLevelIsLow', callback);
+}
+
+export function watchPowerStateDidChange(callback: devicePowerStateUpdate): deviceListener {
+  return eventEmitter.addListener('Expo.powerStateDidChange', callback);
+}

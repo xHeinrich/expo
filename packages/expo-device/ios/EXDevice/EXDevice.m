@@ -23,34 +23,16 @@
 
 
 @implementation EXDevice
+{
+  bool hasListeners;
+}
 
 UM_EXPORT_MODULE(ExpoDevice);
 
-UM_EXPORT_METHOD_AS(digestStringAsync,
-                    digestStringAsync:(NSString *)algorithm
-                    data:(NSString *)data
-                    options:(NSDictionary *)options
-                    resolver:(UMPromiseResolveBlock)resolve
-                    rejecter:(UMPromiseRejectBlock)reject)
+- (void)setModuleRegistry:(UMModuleRegistry *)moduleRegistry
 {
-}
-
-
-UM_EXPORT_METHOD_AS(printStuff, data:(NSString *)data) {
-  NSLog(@"Something To Print");
-}
-
-
-
-UM_EXPORT_METHOD_AS(getBrightnessAsync,
-                    getBrightnessAsyncWithResolver:(UMPromiseResolveBlock)resolve
-                    rejecter:(UMPromiseRejectBlock)reject)
-{
-  __block float result = 0;
-  [UMUtilities performSynchronouslyOnMainThread:^{
-    result = [UIScreen mainScreen].brightness;
-  }];
-  resolve(@(result));
+  _moduleRegistry = moduleRegistry;
+  _eventEmitter = [moduleRegistry getModuleImplementingProtocol:@protocol(UMEventEmitterService)];
 }
 
 UM_EXPORT_METHOD_AS(getMACAddressAsync,
@@ -67,42 +49,57 @@ UM_EXPORT_METHOD_AS(getMACAddressAsync,
     _lowBatteryThreshold = 20;
     [[UIDevice currentDevice] setBatteryMonitoringEnabled:YES];
     
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(batteryLevelDidChange:)
-//                                                 name:UIDeviceBatteryLevelDidChangeNotification
-//                                               object: nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(powerStateDidChange:)
-//                                                 name:UIDeviceBatteryStateDidChangeNotification
-//                                               object: nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(batteryLevelDidChange:)
+                                                 name:UIDeviceBatteryLevelDidChangeNotification
+                                               object: nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(powerStateDidChange:)
+                                                 name:UIDeviceBatteryStateDidChangeNotification
+                                               object: nil];
 #endif
   }
   
   return self;
 }
 
-//- (void)batteryLevelDidChange:(NSNotification *)notification
-//{
-//  if (!hasListeners) {
-//    return;
-//  }
-//
-//  float batteryLevel = [self.powerState[@"batteryLevel"] floatValue];
-//  [self sendEventWithName:@"batteryLevelDidChange" body:@(batteryLevel)];
-//
-//  if (batteryLevel <= _lowBatteryThreshold) {
-//    [self sendEventWithName:@"batteryLevelIsLow" body:@(batteryLevel)];
-//  }
-//}
-//
-//- (void)powerStateDidChange:(NSNotification *)notification
-//{
-//  if (!hasListeners) {
-//    return;
-//  }
-//
-//  [self sendEventWithName:@"powerStateDidChange" body:self.powerState];
-//}
+
+
+- (NSArray<NSString *> *)supportedEvents
+{
+  return @[@"Expo.batteryLevelDidChange", @"Expo.batteryLevelIsLow", @"Expo.powerStateDidChange"];
+}
+
+- (void)startObserving {
+  hasListeners = YES;
+}
+
+- (void)stopObserving {
+  hasListeners = NO;
+}
+
+- (void)batteryLevelDidChange:(NSNotification *)notification
+{
+  if (!hasListeners) {
+    return;
+  }
+  
+  float batteryLevel = [self.powerState[@"batteryLevel"] floatValue];
+  [_eventEmitter sendEventWithName:@"Expo.batteryLevelDidChange" body:@(batteryLevel)];
+  
+  if (batteryLevel <= _lowBatteryThreshold) {
+    [_eventEmitter sendEventWithName:@"Expo.batteryLevelIsLow" body:@(batteryLevel)];
+  }
+}
+
+- (void)powerStateDidChange:(NSNotification *)notification
+{
+  if (!hasListeners) {
+    return;
+  }
+  
+  [_eventEmitter sendEventWithName:@"Expo.powerStateDidChange" body:self.powerState];
+}
 
 
 - (NSDictionary *)powerState
@@ -295,8 +292,7 @@ typedef NS_ENUM(NSInteger, DeviceType) {
 - (NSDictionary *)constantsToExport
 {
   UIDevice *currentDevice = [UIDevice currentDevice];
-    NSString *uniqueId = [DeviceUID uid]; //TODO: need to import this
-
+  NSString *uniqueId = [DeviceUID uid]; //TODO: need to import this
   
   return @{
            @"brand": @"Apple",
@@ -305,13 +301,13 @@ typedef NS_ENUM(NSInteger, DeviceType) {
            @"deviceName": @"name here", //TODO, ADD TO JS AS WELL
            @"deviceId": self.deviceId ?: [NSNull null],
            @"freeDiskStorage": @(self.freeDiskStorage),
-//           @"hasNotch": @YES, // implement into the js
-//           @"isEmulator": @NO,
+           //           @"hasNotch": @YES, // implement into the js
+           //           @"isEmulator": @NO,
            @"isTablet": @(self.isTablet),
            @"manufacturer": @"Apple",
-//           @"model": self.deviceId, // DON'T WORRY ABOUT FOR NOW
-//           @"phoneNumber": @"undefined3", // ANDROID ONLY
-//           @"serialNumber": @"undefined4", // ANDROID ONLY
+           //           @"model": self.deviceId, // DON'T WORRY ABOUT FOR NOW
+           //           @"phoneNumber": @"undefined3", // ANDROID ONLY
+           //           @"serialNumber": @"undefined4", // ANDROID ONLY
            @"supportedABIs": @[[self getCPUType]],
            @"systemName": currentDevice.systemName,
            @"totalMemory": @(self.totalMemory),

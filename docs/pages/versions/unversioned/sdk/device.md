@@ -34,6 +34,8 @@ Gets the device manufacturer.
 
 #### `Device.model: string`
 
+__iOS warning__: The list with device names is maintained by the community and could lag new devices. It is recommended to use `getDeviceId()` since it's more reliable and always up-to-date with new iOS devices. We do accept pull requests that add new iOS devices to the list with device names.
+
 Gets the device model.
 
 #### `Device.phoneNumber: string` (Android Only)

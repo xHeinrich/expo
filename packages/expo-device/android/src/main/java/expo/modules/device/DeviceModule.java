@@ -392,7 +392,7 @@ public class DeviceModule extends ExportedModule implements RegistryLifecycleLis
   }
 
   @ExpoMethod
-  public void isPinOrFingerprintSet(Promise promise) {
+  public void isPinOrFingerprintSetAsync(Promise promise) {
     KeyguardManager keyguardManager = (KeyguardManager) mContext.getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE); //api 16+
     promise.resolve(keyguardManager.isKeyguardSecure());
   }

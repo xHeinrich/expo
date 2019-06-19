@@ -20,10 +20,6 @@ import { Device } from 'expo';
 
 Gets the device brand.
 
-#### `Device.freeDiskStorage: number`
-
-Gets available storage size, in bytes.
-
 #### `Device.carrier: string`
 
 Gets the carrier name (network operator).
@@ -34,7 +30,7 @@ Gets the device manufacturer.
 
 #### `Device.model: string`
 
-__iOS warning__: The list with device names is maintained by the community and could lag new devices. It is recommended to use `getDeviceId()` since it's more reliable and always up-to-date with new iOS devices. We do accept pull requests that add new iOS devices to the list with device names.
+**iOS warning**: The list with device names is maintained by the community and could lag new devices. It is recommended to use `getDeviceId()` since it's more reliable and always up-to-date with new iOS devices. We do accept pull requests that add new iOS devices to the list with device names.
 
 Gets the device model.
 
@@ -104,6 +100,7 @@ Device.supportedABIs; // [ "arm64 v8", "Intel x86-64h Haswell", "arm64-v8a", "ar
 - `Device.getPowerStateAsync()` (IOS only)
 - `Device.isAirplaneModeAsync()` (Android only)
 - `Device.isPinOrFingerprintSet()`
+- `Device.getFreeDiskStorageAsync()`
 
 ## Methods
 
@@ -121,6 +118,21 @@ A boolean that represents the support for notch display.
 const hasNotch = Device.hasNotch();
 ```
 
+### `Device.getFreeDiskStorageAsync()`
+
+Gets available storage size, in bytes.
+
+#### Returns
+
+A promise of string that represents the storage size.
+
+**Examples**
+
+```js
+Device.getFreeDiskStorageAsync().then(storage => {
+  //'5608296448'
+});
+```
 
 ### `Device.getBatteryLevelAsync()`
 

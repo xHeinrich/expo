@@ -161,13 +161,6 @@ public class DeviceModule extends ExportedModule implements RegistryLifecycleLis
     actMgr.getMemoryInfo(memInfo);
     constants.putLong("totalMemory", memInfo.totalMem);
 
-    try {
-      constants.putLong("freeDiskStorage", this.getFreeDiskStorage().longValue());
-    } catch (NullPointerException e) {
-      e.printStackTrace();
-      constants.putLong("freeDiskStorage", (Long) null);
-    }
-
     return constants;
   }
 
@@ -298,6 +291,18 @@ public class DeviceModule extends ExportedModule implements RegistryLifecycleLis
     int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
     float batteryLevel = level / (float) scale;
     promise.resolve(batteryLevel);
+  }
+
+  @ExpoMethod
+  public void getFreeDiskStorageAsync(Promise promise) {
+    try {
+      BigInteger storage = this.getFreeDiskStorage();
+      String stringValue = storage.toString();
+      promise.resolve(stringValue);
+    } catch (NullPointerException e) {
+      e.printStackTrace();
+      promise.reject(e);
+    }
   }
 
   @ExpoMethod

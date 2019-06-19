@@ -19,7 +19,6 @@ export interface deviceListener {
 }
 
 export const brand = ExpoDevice.brand;
-export const freeDiskStorage = ExpoDevice.freeDiskStorage;
 export const carrier = ExpoDevice.carrier;
 export const manufacturer = ExpoDevice.manufacturer;
 if (Platform.OS === 'ios') {
@@ -65,6 +64,9 @@ export function hasNotch(): boolean {
         item.model.toLowerCase() === ((Platform.OS === 'ios') ? modelName.toLowerCase() : ExpoDevice.model.toLowerCase())
     ) !== -1
   );
+}
+export async function getFreeDiskStorageAsync(): Promise<String> {
+  return await ExpoDevice.getFreeDiskStorageAsync();
 }
 export async function getBatteryLevelAsync(): Promise<number> {
   return await ExpoDevice.getBatteryLevelAsync();

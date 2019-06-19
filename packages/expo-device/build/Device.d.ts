@@ -4,7 +4,6 @@ export interface deviceListener {
     remove: () => void;
 }
 export declare const brand: any;
-export declare const freeDiskStorage: any;
 export declare const carrier: any;
 export declare const manufacturer: any;
 export declare const model: any;
@@ -20,6 +19,7 @@ export declare const deviceId: any;
 export declare const totalDiskCapacity: any;
 export declare const supportedABIs: any;
 export declare function hasNotch(): boolean;
+export declare function getFreeDiskStorageAsync(): Promise<String>;
 export declare function getBatteryLevelAsync(): Promise<number>;
 export declare function getIPAddressAsync(): Promise<string>;
 export declare function getMACAddressAsync(): Promise<string>;

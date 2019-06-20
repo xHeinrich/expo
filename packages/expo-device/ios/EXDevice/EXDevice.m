@@ -111,6 +111,7 @@ UM_EXPORT_METHOD_AS(getMACAddressAsync,
   _hasListeners = NO;
 }
 
+// Called at most once every minute
 - (void)batteryLevelDidChange:(NSNotification *)notification
 {
   NSLog(@"batteryLevelDidChange was called");
@@ -119,7 +120,7 @@ UM_EXPORT_METHOD_AS(getMACAddressAsync,
     return;
   }
   
-  float batteryLevel = [self.powerState[@"batteryLevel"] floatValue];
+  float batteryLevel = [[self getPowerState][@"batteryLevel"] floatValue];
   [_eventEmitter sendEventWithName:@"Expo.batteryLevelDidChange" body:@(batteryLevel)];
 }
 
@@ -131,7 +132,7 @@ UM_EXPORT_METHOD_AS(getMACAddressAsync,
     return;
   }
   
-  [_eventEmitter sendEventWithName:@"Expo.powerStateDidChange" body:self.powerState];
+  [_eventEmitter sendEventWithName:@"Expo.powerStateDidChange" body:[self getPowerState]];
 }
 
 - (void)powerModeDidChange:(NSNotification *)notification
@@ -140,12 +141,15 @@ UM_EXPORT_METHOD_AS(getMACAddressAsync,
     return;
   }
   
-  NSString *state = NSProcessInfo.processInfo.isLowPowerModeEnabled ? @"on" : @"off";
-  [_eventEmitter sendEventWithName:@"Expo.powerModeDidChange" body:state];
+  [_eventEmitter sendEventWithName:@"Expo.powerModeDidChange" body:[EXDevice.class valueForIsLowPowerModeEnabled: NSProcessInfo.processInfo.isLowPowerModeEnabled]];
 }
 
++ (NSString *)valueForIsLowPowerModeEnabled:(BOOL)isLowPowerModeEnabled
+{
+  return isLowPowerModeEnabled ? @"on" : @"off";
+}
 
-- (NSDictionary *)powerState
+- (NSDictionary *)getPowerState
 {
 #if RCT_DEV && (!TARGET_IPHONE_SIMULATOR) && !TARGET_OS_TV
   if ([UIDevice currentDevice].isBatteryMonitoringEnabled != YES) {
@@ -160,35 +164,40 @@ UM_EXPORT_METHOD_AS(getMACAddressAsync,
 #endif
   
   NSArray *batteryStates = @[@"unknown", @"unplugged", @"charging", @"full"];
-  return @{
-#if TARGET_OS_TV
-           @"batteryLevel": @1,
-           @"batteryState": @"full",
-#else
-           @"batteryLevel": @(UIDevice.currentDevice.batteryLevel),
-           @"batteryState": batteryStates[UIDevice.currentDevice.batteryState],
-           @"lowPowerMode": @(NSProcessInfo.processInfo.isLowPowerModeEnabled),
-#endif
-           };
+  __block NSDictionary *powerState;
+  
+  [UMUtilities performSynchronouslyOnMainThread:^{
+    powerState = @{
+  #if TARGET_OS_TV
+             @"batteryLevel": 1,
+             @"batteryState": @"full",
+  #else
+             @"batteryLevel": @([UIDevice currentDevice].batteryLevel),
+             @"batteryState": batteryStates[[UIDevice currentDevice].batteryState],
+             @"isLowPowerModeEnabled": [EXDevice.class valueForIsLowPowerModeEnabled: NSProcessInfo.processInfo.isLowPowerModeEnabled],
+  #endif
+             };
+    }];
+  return powerState;
 }
 
 UM_EXPORT_METHOD_AS(getPowerStateAsync,
                     getPowerStateAsyncWithResolver:(UMPromiseResolveBlock)resolve rejecter:(UMPromiseRejectBlock)reject)
 {
-  return resolve(self.powerState);
+  resolve([self getPowerState]);
 }
 
 UM_EXPORT_METHOD_AS(getBatteryLevelAsync,
                     getBatteryLevelAsyncWithResolver:(UMPromiseResolveBlock)resolve
                     rejecter:(UMPromiseRejectBlock)reject)
 {
-  resolve(@([self.powerState[@"batteryLevel"] floatValue]));
+  resolve(@([[self getPowerState][@"batteryLevel"] floatValue]));
 }
 
 UM_EXPORT_METHOD_AS(isBatteryChargingAsync,
                     isBatteryCharingAsyncWithResolver:(UMPromiseResolveBlock)resolve rejecter:(UMPromiseRejectBlock)reject)
 {
-  BOOL isCharging = [self.powerState[@"batteryState"] isEqualToString:@"charging"];
+  BOOL isCharging = [[self getPowerState][@"batteryState"] isEqualToString:@"charging"];
   resolve(@(isCharging));
 }
 

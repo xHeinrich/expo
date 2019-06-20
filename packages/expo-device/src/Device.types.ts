@@ -1,7 +1,7 @@
 export type PowerState = {
     batteryLevel?: number;
     batteryState?: string;
-    lowPowerMode?: boolean;
+    isLowPowerModeEnabled?: boolean;
 };
 export type isPinOrFingerprintSetCallback = (isPinOrFingerprintSet: boolean) => void
 

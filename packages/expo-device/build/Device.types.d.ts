@@ -1,7 +1,7 @@
 export declare type PowerState = {
     batteryLevel?: number;
     batteryState?: string;
-    lowPowerMode?: boolean;
+    isLowPowerModeEnabled?: boolean;
 };
 export declare type isPinOrFingerprintSetCallback = (isPinOrFingerprintSet: boolean) => void;
 export declare type deviceBatteryUpdateCallback = (result: number) => void;

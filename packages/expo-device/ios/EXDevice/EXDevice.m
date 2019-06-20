@@ -17,17 +17,27 @@
 #import <CoreTelephony/CTCarrier.h>
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 
+#import <UMCore/UMUtilitiesInterface.h>
+#import <UMCore/UMUtilities.h>
+
 #if !(TARGET_OS_TV)
 #import <LocalAuthentication/LocalAuthentication.h>
 #endif
 
+@interface EXDevice()
+
+@property (nonatomic, assign) BOOL hasListeners;
+
+@end
 
 @implementation EXDevice
-{
-  bool hasListeners;
-}
 
 UM_EXPORT_MODULE(ExpoDevice);
+
+- (dispatch_queue_t)methodQueue
+{
+  return dispatch_get_main_queue();
+}
 
 - (void)setModuleRegistry:(UMModuleRegistry *)moduleRegistry
 {
@@ -46,66 +56,99 @@ UM_EXPORT_METHOD_AS(getMACAddressAsync,
 {
   if ((self = [super init])) {
 #if !TARGET_OS_TV
-    _lowBatteryThreshold = 20;
-    [[UIDevice currentDevice] setBatteryMonitoringEnabled:YES];
+    [UIDevice.currentDevice setBatteryMonitoringEnabled:YES];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(batteryLevelDidChange:)
                                                  name:UIDeviceBatteryLevelDidChangeNotification
-                                               object: nil];
+                                               object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(powerStateDidChange:)
                                                  name:UIDeviceBatteryStateDidChangeNotification
-                                               object: nil];
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(powerModeDidChange:)
+                                                 name:NSProcessInfoPowerStateDidChangeNotification
+                                               object:nil];
 #endif
   }
   
   return self;
 }
 
+- (void)dealloc {
+  [self invalidate];
+}
 
+- (void)invalidate {
+  _eventEmitter = nil;
+  [UIDevice currentDevice].batteryMonitoringEnabled = NO;
+  [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                  name:UIDeviceBatteryLevelDidChangeNotification
+                                                object:nil];
+  [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                  name:UIDeviceBatteryStateDidChangeNotification
+                                                object:nil];
+  [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                  name:NSProcessInfoPowerStateDidChangeNotification
+                                                object:nil];
+  
+  
+  
+}
 
 - (NSArray<NSString *> *)supportedEvents
 {
-  return @[@"Expo.batteryLevelDidChange", @"Expo.batteryLevelIsLow", @"Expo.powerStateDidChange"];
+  return @[@"Expo.batteryLevelDidChange", @"Expo.powerStateDidChange", @"Expo.powerModeDidChange"];
 }
 
 - (void)startObserving {
-  hasListeners = YES;
+  _hasListeners = YES;
 }
 
 - (void)stopObserving {
-  hasListeners = NO;
+  _hasListeners = NO;
 }
 
 - (void)batteryLevelDidChange:(NSNotification *)notification
 {
-  if (!hasListeners) {
+  NSLog(@"batteryLevelDidChange was called");
+  if (!_hasListeners) {
+    NSLog(@"and hasListeners was false");
     return;
   }
   
   float batteryLevel = [self.powerState[@"batteryLevel"] floatValue];
   [_eventEmitter sendEventWithName:@"Expo.batteryLevelDidChange" body:@(batteryLevel)];
-  
-  if (batteryLevel <= _lowBatteryThreshold) {
-    [_eventEmitter sendEventWithName:@"Expo.batteryLevelIsLow" body:@(batteryLevel)];
-  }
 }
 
 - (void)powerStateDidChange:(NSNotification *)notification
 {
-  if (!hasListeners) {
+  NSLog(@"powerStateDidChange was called");
+  if (!_hasListeners) {
+    NSLog(@"and hasListeners was false");
     return;
   }
   
   [_eventEmitter sendEventWithName:@"Expo.powerStateDidChange" body:self.powerState];
 }
 
+- (void)powerModeDidChange:(NSNotification *)notification
+{
+  if(!_hasListeners) {
+    return;
+  }
+  
+  NSString *state = NSProcessInfo.processInfo.isLowPowerModeEnabled ? @"on" : @"off";
+  [_eventEmitter sendEventWithName:@"Expo.powerModeDidChange" body:state];
+}
+
 
 - (NSDictionary *)powerState
 {
 #if RCT_DEV && (!TARGET_IPHONE_SIMULATOR) && !TARGET_OS_TV
-  if ([UIDevice currentDevice].isBatteryMonitoringEnabled != true) {
+  if ([UIDevice currentDevice].isBatteryMonitoringEnabled != YES) {
     RCTLogWarn(@"Battery monitoring is not enabled. "
                "You need to enable monitoring with `[UIDevice currentDevice].batteryMonitoringEnabled = TRUE`");
   }
@@ -116,14 +159,15 @@ UM_EXPORT_METHOD_AS(getMACAddressAsync,
   }
 #endif
   
+  NSArray *batteryStates = @[@"unknown", @"unplugged", @"charging", @"full"];
   return @{
 #if TARGET_OS_TV
            @"batteryLevel": @1,
            @"batteryState": @"full",
 #else
-           @"batteryLevel": @([UIDevice currentDevice].batteryLevel),
-           @"batteryState": [@[@"unknown", @"unplugged", @"charging", @"full"] objectAtIndex: [UIDevice currentDevice].batteryState],
-           @"lowPowerMode": @([NSProcessInfo processInfo].isLowPowerModeEnabled),
+           @"batteryLevel": @(UIDevice.currentDevice.batteryLevel),
+           @"batteryState": batteryStates[UIDevice.currentDevice.batteryState],
+           @"lowPowerMode": @(NSProcessInfo.processInfo.isLowPowerModeEnabled),
 #endif
            };
 }
@@ -188,7 +232,13 @@ UM_EXPORT_METHOD_AS(isPinOrFingerprintSetAsync, isPinOrFingerprintSetAsyncWithRe
   resolve(@[[NSNumber numberWithBool:isPinOrFingerprintSet]]);
 }
 
-- (NSString*) deviceId
+UM_EXPORT_METHOD_AS(getFreeDiskStorageAsync, getFreeDiskStorageAsyncWithResolver:(UMPromiseResolveBlock)resolve rejector:(UMPromiseRejectBlock)reject)
+{
+  NSString *returnString = [NSString stringWithFormat:@"%llu", self.freeDiskStorage];
+  resolve(returnString);
+}
+
+- (NSString *)deviceId
 {
   struct utsname systemInfo;
   
@@ -204,7 +254,7 @@ UM_EXPORT_METHOD_AS(isPinOrFingerprintSetAsync, isPinOrFingerprintSetAsyncWithRe
   return deviceId;
 }
 
-- (NSString *) carrier
+- (NSString *)carrier
 {
 #if (TARGET_OS_TV)
   return nil;
@@ -225,7 +275,7 @@ typedef NS_ENUM(NSInteger, DeviceType) {
 
 #define DeviceTypeValues [NSArray arrayWithObjects: @"Handset", @"Tablet", @"Tv", @"Unknown", nil]
 
-- (DeviceType) getDeviceType
+- (DeviceType)getDeviceType
 {
   switch ([[UIDevice currentDevice] userInterfaceIdiom]) {
     case UIUserInterfaceIdiomPhone: return DeviceTypeHandset;
@@ -300,7 +350,7 @@ typedef NS_ENUM(NSInteger, DeviceType) {
            @"deviceType": [DeviceTypeValues objectAtIndex: [self getDeviceType]] ?: [NSNull null],
            @"deviceName": @"name here", //TODO, ADD TO JS AS WELL
            @"deviceId": self.deviceId ?: [NSNull null],
-           @"freeDiskStorage": @(self.freeDiskStorage),
+           //           @"freeDiskStorage": @(self.freeDiskStorage),
            //           @"hasNotch": @YES, // implement into the js
            //           @"isEmulator": @NO,
            @"isTablet": @(self.isTablet),

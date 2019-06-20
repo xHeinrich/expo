@@ -6,7 +6,8 @@ import {
   devicesWithNotch,
   deviceBatteryUpdateCallback,
   devicePowerStateUpdate,
-  deviceNamesByCode
+  deviceNamesByCode,
+  devicePowerModeUpdateCallback
 } from './Device.types';
 
 export { default as ExpoDeviceInfoView } from './ExpoDeviceView';
@@ -116,8 +117,8 @@ export function watchBatteryLevelChange(callback: deviceBatteryUpdateCallback): 
   return eventEmitter.addListener('Expo.batteryLevelDidChange', callback);
 }
 
-export function watchBatteryLevelIsLow(callback: deviceBatteryUpdateCallback): deviceListener {
-  return eventEmitter.addListener('Expo.batteryLevelIsLow', callback);
+export function watchPowerMode(callback: devicePowerModeUpdateCallback): deviceListener {
+  return eventEmitter.addListener('Expo.powerModeDidChange', callback);
 }
 
 export function watchPowerStateDidChange(callback: devicePowerStateUpdate): deviceListener {

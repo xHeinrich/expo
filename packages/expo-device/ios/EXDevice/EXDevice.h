@@ -6,10 +6,9 @@
 #import <UMCore/UMEventEmitterService.h>
 #import <UMCore/UMModuleRegistryConsumer.h>
 
-@interface EXDevice : UMExportedModule <UMEventEmitter> 
+@interface EXDevice : UMExportedModule <UMModuleRegistryConsumer, UMEventEmitter>
 
 @property (nonatomic) bool isEmulator;
-@property (nonatomic) float lowBatteryThreshold;
 @property (nonatomic, weak) id <UMEventEmitterService> eventEmitter;
 @property (weak, nonatomic) UMModuleRegistry *moduleRegistry;
 

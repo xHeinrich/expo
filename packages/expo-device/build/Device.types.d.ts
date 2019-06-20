@@ -5,6 +5,7 @@ export declare type PowerState = {
 };
 export declare type isPinOrFingerprintSetCallback = (isPinOrFingerprintSet: boolean) => void;
 export declare type deviceBatteryUpdateCallback = (result: number) => void;
+export declare type devicePowerModeUpdateCallback = (result: string) => void;
 export declare type devicePowerStateUpdate = (result: PowerState) => void;
 export declare const devicesWithNotch: {
     brand: string;

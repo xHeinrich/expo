@@ -1,4 +1,4 @@
-import { PowerState, deviceBatteryUpdateCallback, devicePowerStateUpdate } from './Device.types';
+import { PowerState, deviceBatteryUpdateCallback, devicePowerStateUpdate, devicePowerModeUpdateCallback } from './Device.types';
 export { default as ExpoDeviceInfoView } from './ExpoDeviceView';
 export interface deviceListener {
     remove: () => void;
@@ -29,5 +29,5 @@ export declare function isAirplaneModeAsync(): Promise<boolean | string>;
 export declare function hasSystemFeatureAsync(feature: string): Promise<boolean | string>;
 export declare function isPinOrFingerprintSetAsync(): Promise<boolean>;
 export declare function watchBatteryLevelChange(callback: deviceBatteryUpdateCallback): deviceListener;
-export declare function watchBatteryLevelIsLow(callback: deviceBatteryUpdateCallback): deviceListener;
+export declare function watchPowerMode(callback: devicePowerModeUpdateCallback): deviceListener;
 export declare function watchPowerStateDidChange(callback: devicePowerStateUpdate): deviceListener;

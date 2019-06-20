@@ -1,5 +1,5 @@
 import ExpoDevice from './ExpoDevice';
-import { devicesWithNotch, } from './Device.types';
+import { devicesWithNotch, deviceNamesByCode } from './Device.types';
 export { default as ExpoDeviceInfoView } from './ExpoDeviceView';
 import { Platform, EventEmitter } from '@unimodules/core';
 const eventEmitter = new EventEmitter(ExpoDevice);
@@ -94,8 +94,8 @@ export async function isPinOrFingerprintSetAsync() {
 export function watchBatteryLevelChange(callback) {
     return eventEmitter.addListener('Expo.batteryLevelDidChange', callback);
 }
-export function watchBatteryLevelIsLow(callback) {
-    return eventEmitter.addListener('Expo.batteryLevelIsLow', callback);
+export function watchPowerMode(callback) {
+    return eventEmitter.addListener('Expo.powerModeDidChange', callback);
 }
 export function watchPowerStateDidChange(callback) {
     return eventEmitter.addListener('Expo.powerStateDidChange', callback);

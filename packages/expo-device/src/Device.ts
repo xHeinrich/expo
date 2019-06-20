@@ -1,23 +1,13 @@
 import ExpoDevice from './ExpoDevice';
 
 import {
-  PowerState,
-  isPinOrFingerprintSetCallback,
   devicesWithNotch,
-  deviceBatteryUpdateCallback,
-  devicePowerStateUpdate,
   deviceNamesByCode,
-  devicePowerModeUpdateCallback
 } from './Device.types';
 
 export { default as ExpoDeviceInfoView } from './ExpoDeviceView';
 
-import { Platform, EventEmitter } from '@unimodules/core';
-
-const eventEmitter = new EventEmitter(ExpoDevice);
-export interface deviceListener {
-  remove: () => void;
-}
+import { Platform } from '@unimodules/core';
 
 export const brand = ExpoDevice.brand;
 export const carrier = ExpoDevice.carrier;
@@ -69,9 +59,6 @@ export function hasNotch(): boolean {
 export async function getFreeDiskStorageAsync(): Promise<String> {
   return await ExpoDevice.getFreeDiskStorageAsync();
 }
-export async function getBatteryLevelAsync(): Promise<number> {
-  return await ExpoDevice.getBatteryLevelAsync();
-}
 
 export async function getIPAddressAsync(): Promise<string> {
   return await ExpoDevice.getIPAddressAsync();
@@ -79,18 +66,6 @@ export async function getIPAddressAsync(): Promise<string> {
 
 export async function getMACAddressAsync(): Promise<string> {
   return await ExpoDevice.getMACAddressAsync();
-}
-
-export async function getPowerStateAsync(): Promise<PowerState | string> {
-  if (Platform.OS === 'ios') {
-    return await ExpoDevice.getPowerStateAsync();
-  } else {
-    return Promise.reject('This platform does not support this method');
-  }
-}
-
-export async function isBatteryChargingAsync(): Promise<boolean> {
-  return await ExpoDevice.isBatteryChargingAsync();
 }
 
 export async function isAirplaneModeAsync(): Promise<boolean | string> {
@@ -111,16 +86,4 @@ export async function hasSystemFeatureAsync(feature: string): Promise<boolean | 
 
 export async function isPinOrFingerprintSetAsync(): Promise<boolean>{
   return await ExpoDevice.isPinOrFingerprintSetAsync();
-}
-
-export function watchBatteryLevelChange(callback: deviceBatteryUpdateCallback): deviceListener {
-  return eventEmitter.addListener('Expo.batteryLevelDidChange', callback);
-}
-
-export function watchPowerMode(callback: devicePowerModeUpdateCallback): deviceListener {
-  return eventEmitter.addListener('Expo.powerModeDidChange', callback);
-}
-
-export function watchPowerStateDidChange(callback: devicePowerStateUpdate): deviceListener {
-  return eventEmitter.addListener('Expo.powerStateDidChange', callback);
 }

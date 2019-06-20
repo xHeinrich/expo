@@ -2,23 +2,17 @@ package expo.modules.device;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.BatteryManager;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.app.ActivityCompat;
-import android.view.SurfaceHolder.Callback;
 import android.app.KeyguardManager;
-import android.view.View;
 import android.os.StatFs;
 import android.telephony.TelephonyManager;
 import android.app.ActivityManager;
@@ -285,15 +279,6 @@ public class DeviceModule extends ExportedModule implements RegistryLifecycleLis
   }
 
   @ExpoMethod
-  public void getBatteryLevelAsync(Promise promise) {
-    Intent batteryIntent = mContext.getApplicationContext().registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-    int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-    int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-    float batteryLevel = level / (float) scale;
-    promise.resolve(batteryLevel);
-  }
-
-  @ExpoMethod
   public void getFreeDiskStorageAsync(Promise promise) {
     try {
       BigInteger storage = this.getFreeDiskStorage();
@@ -374,15 +359,6 @@ public class DeviceModule extends ExportedModule implements RegistryLifecycleLis
     isAirPlaneMode = Settings.Global.getInt(mContext.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
 
     promise.resolve(isAirPlaneMode);
-  }
-
-  @ExpoMethod
-  public void isBatteryChargingAsync(Promise promise) {
-    IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-    Intent batteryStatus = mContext.getApplicationContext().registerReceiver(null, intentFilter);
-    int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-    boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING;
-    promise.resolve(isCharging);
   }
 
   @ExpoMethod

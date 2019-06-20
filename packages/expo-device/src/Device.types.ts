@@ -1,14 +1,3 @@
-export type PowerState = {
-    batteryLevel?: number;
-    batteryState?: string;
-    isLowPowerModeEnabled?: boolean;
-};
-export type isPinOrFingerprintSetCallback = (isPinOrFingerprintSet: boolean) => void
-
-export type deviceBatteryUpdateCallback = (result: number) => void;
-export type devicePowerModeUpdateCallback = (result: string) => void; 
-export type devicePowerStateUpdate = (result: PowerState) => void;
-
 export const devicesWithNotch = [
     {
       brand: 'Apple',

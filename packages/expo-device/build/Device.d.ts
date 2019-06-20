@@ -1,8 +1,4 @@
-import { PowerState, deviceBatteryUpdateCallback, devicePowerStateUpdate, devicePowerModeUpdateCallback } from './Device.types';
 export { default as ExpoDeviceInfoView } from './ExpoDeviceView';
-export interface deviceListener {
-    remove: () => void;
-}
 export declare const brand: any;
 export declare const carrier: any;
 export declare const manufacturer: any;
@@ -20,14 +16,8 @@ export declare const totalDiskCapacity: any;
 export declare const supportedABIs: any;
 export declare function hasNotch(): boolean;
 export declare function getFreeDiskStorageAsync(): Promise<String>;
-export declare function getBatteryLevelAsync(): Promise<number>;
 export declare function getIPAddressAsync(): Promise<string>;
 export declare function getMACAddressAsync(): Promise<string>;
-export declare function getPowerStateAsync(): Promise<PowerState | string>;
-export declare function isBatteryChargingAsync(): Promise<boolean>;
 export declare function isAirplaneModeAsync(): Promise<boolean | string>;
 export declare function hasSystemFeatureAsync(feature: string): Promise<boolean | string>;
 export declare function isPinOrFingerprintSetAsync(): Promise<boolean>;
-export declare function watchBatteryLevelChange(callback: deviceBatteryUpdateCallback): deviceListener;
-export declare function watchPowerMode(callback: devicePowerModeUpdateCallback): deviceListener;
-export declare function watchPowerStateDidChange(callback: devicePowerStateUpdate): deviceListener;

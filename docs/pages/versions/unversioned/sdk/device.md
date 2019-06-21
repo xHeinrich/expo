@@ -62,10 +62,6 @@ Gets the device total memory, in bytes.
 
 Gets the device unique ID.
 
-#### `Device.userAgent: string`
-
-Gets the device User Agent.
-
 #### `Device.isTablet: boolean`
 
 Tells if the device is a tablet.
@@ -98,6 +94,7 @@ Device.supportedABIs; // [ "arm64 v8", "Intel x86-64h Haswell", "arm64-v8a", "ar
 - `Device.isAirplaneModeAsync()` (Android only)
 - `Device.isPinOrFingerprintSet()`
 - `Device.getFreeDiskStorageAsync()`
+- `Device.getUserAgentAsync()`
 
 ## Methods
 
@@ -113,6 +110,22 @@ A boolean that represents the support for notch display.
 
 ```js
 const hasNotch = Device.hasNotch();
+```
+
+### `Device.getUserAgentAsync()`
+
+Gets the device User Agent.
+
+#### Returns
+
+A Promise that resolves to a string of User Agent.
+
+**Examples**
+
+```js
+Device.getUserAgentAsync().then(userAgent => {
+  //Dalvik/2.1.0 (Linux; U; Android 9; Pixel 2 Build/PQ3A.190505.001)
+});
 ```
 
 ### `Device.getFreeDiskStorageAsync()`

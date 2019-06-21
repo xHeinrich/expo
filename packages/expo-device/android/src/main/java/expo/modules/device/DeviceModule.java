@@ -145,7 +145,6 @@ public class DeviceModule extends ExportedModule implements RegistryLifecycleLis
     constants.putString("deviceId", Build.BOARD);
     constants.putLong("totalDiskCapacity", this.getTotalDiskCapacity().longValue());
     constants.putString("uniqueId", Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID));
-    constants.putString("userAgent", System.getProperty("http.agent"));
     constants.putString("deviceType", deviceType.getValue());
     constants.putBoolean("isTablet", this.isTablet());
     constants.putStringArray("supportedABIs", Build.SUPPORTED_ABIS);
@@ -376,5 +375,11 @@ public class DeviceModule extends ExportedModule implements RegistryLifecycleLis
   public void isPinOrFingerprintSetAsync(Promise promise) {
     KeyguardManager keyguardManager = (KeyguardManager) mContext.getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE); //api 16+
     promise.resolve(keyguardManager.isKeyguardSecure());
+  }
+
+  @ExpoMethod
+  public void getUserAgentAsync(Promise promise) {
+    String userAgent = System.getProperty("http.agent");
+    promise.resolve(userAgent);
   }
 }

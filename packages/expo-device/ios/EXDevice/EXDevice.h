@@ -2,14 +2,11 @@
 
 #import <UMCore/UMExportedModule.h>
 #import <Foundation/Foundation.h>
-#import <UMCore/UMEventEmitter.h>
-#import <UMCore/UMEventEmitterService.h>
 #import <UMCore/UMModuleRegistryConsumer.h>
 
-@interface EXDevice : UMExportedModule <UMModuleRegistryConsumer, UMEventEmitter>
+@interface EXDevice : UMExportedModule <UMModuleRegistryConsumer>
 
 @property (nonatomic) bool isEmulator;
-@property (nonatomic, weak) id <UMEventEmitterService> eventEmitter;
 @property (weak, nonatomic) UMModuleRegistry *moduleRegistry;
 
 @end

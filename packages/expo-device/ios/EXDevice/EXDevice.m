@@ -4,7 +4,6 @@
 #import "DeviceUID.h"
 #import <UMCore/UMUtilities.h>
 
-
 #include <ifaddrs.h>
 #include <arpa/inet.h>
 #import <mach-o/arch.h>
@@ -20,13 +19,17 @@
 #import <UMCore/UMUtilitiesInterface.h>
 #import <UMCore/UMUtilities.h>
 
+#import <WebKit/WKWebView.h>
+
 #if !(TARGET_OS_TV)
 #import <LocalAuthentication/LocalAuthentication.h>
 #endif
 
-@interface EXDevice()
+@interface EXDevice() {
+  WKWebView *webView;
+}
 
-@property (nonatomic, assign) BOOL hasListeners;
+@property (nonatomic, strong) NSString *webViewUserAgent;
 
 @end
 
@@ -42,165 +45,45 @@ UM_EXPORT_MODULE(ExpoDevice);
 - (void)setModuleRegistry:(UMModuleRegistry *)moduleRegistry
 {
   _moduleRegistry = moduleRegistry;
-  _eventEmitter = [moduleRegistry getModuleImplementingProtocol:@protocol(UMEventEmitterService)];
+}
+
+UM_EXPORT_METHOD_AS(getUserAgentAsync,
+                    getWebViewUserAgentWithResolver:(UMPromiseResolveBlock)resolve
+                    rejecter:(UMPromiseRejectBlock)reject)
+{
+  __weak EXDevice *weakSelf = self;
+  dispatch_async(dispatch_get_main_queue(), ^{
+    __strong EXDevice *strongSelf = weakSelf;
+    if (strongSelf) {
+      if (!strongSelf.webViewUserAgent) {
+        // We need to retain the webview because it runs an async task.
+        strongSelf->webView = [[WKWebView alloc] init];
+        
+        [strongSelf->webView evaluateJavaScript:@"window.navigator.userAgent;" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+          if (error) {
+            reject(@"ERR_CONSTANTS", error.localizedDescription, error);
+            return;
+          }
+          
+          strongSelf.webViewUserAgent = [NSString stringWithFormat:@"%@", result];
+          resolve(UMNullIfNil(strongSelf.webViewUserAgent));
+          // Destroy the webview now that it's task is complete.
+          strongSelf->webView = nil;
+        }];
+      } else {
+        resolve(UMNullIfNil(strongSelf.webViewUserAgent));
+      }
+    }
+  });
 }
 
 UM_EXPORT_METHOD_AS(getMACAddressAsync,
                     resolver:(UMPromiseResolveBlock)resolve
                     rejecter:(UMPromiseRejectBlock)reject) {
+  //some iOS privacy issues
   NSString *address = @"02:00:00:00:00:00";
   resolve(address);
 }
-
-- (id)init
-{
-  if ((self = [super init])) {
-#if !TARGET_OS_TV
-    [UIDevice.currentDevice setBatteryMonitoringEnabled:YES];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(batteryLevelDidChange:)
-                                                 name:UIDeviceBatteryLevelDidChangeNotification
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(powerStateDidChange:)
-                                                 name:UIDeviceBatteryStateDidChangeNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(powerModeDidChange:)
-                                                 name:NSProcessInfoPowerStateDidChangeNotification
-                                               object:nil];
-#endif
-  }
-  
-  return self;
-}
-
-- (void)dealloc {
-  [self invalidate];
-}
-
-- (void)invalidate {
-  _eventEmitter = nil;
-  [UIDevice currentDevice].batteryMonitoringEnabled = NO;
-  [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                  name:UIDeviceBatteryLevelDidChangeNotification
-                                                object:nil];
-  [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                  name:UIDeviceBatteryStateDidChangeNotification
-                                                object:nil];
-  [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                  name:NSProcessInfoPowerStateDidChangeNotification
-                                                object:nil];
-  
-  
-  
-}
-
-- (NSArray<NSString *> *)supportedEvents
-{
-  return @[@"Expo.batteryLevelDidChange", @"Expo.powerStateDidChange", @"Expo.powerModeDidChange"];
-}
-
-- (void)startObserving {
-  _hasListeners = YES;
-}
-
-- (void)stopObserving {
-  _hasListeners = NO;
-}
-
-// Called at most once every minute
-- (void)batteryLevelDidChange:(NSNotification *)notification
-{
-  NSLog(@"batteryLevelDidChange was called");
-  if (!_hasListeners) {
-    NSLog(@"and hasListeners was false");
-    return;
-  }
-  
-  float batteryLevel = [[self getPowerState][@"batteryLevel"] floatValue];
-  [_eventEmitter sendEventWithName:@"Expo.batteryLevelDidChange" body:@(batteryLevel)];
-}
-
-- (void)powerStateDidChange:(NSNotification *)notification
-{
-  NSLog(@"powerStateDidChange was called");
-  if (!_hasListeners) {
-    NSLog(@"and hasListeners was false");
-    return;
-  }
-  
-  [_eventEmitter sendEventWithName:@"Expo.powerStateDidChange" body:[self getPowerState]];
-}
-
-- (void)powerModeDidChange:(NSNotification *)notification
-{
-  if(!_hasListeners) {
-    return;
-  }
-  
-  [_eventEmitter sendEventWithName:@"Expo.powerModeDidChange" body:[EXDevice.class valueForIsLowPowerModeEnabled: NSProcessInfo.processInfo.isLowPowerModeEnabled]];
-}
-
-+ (NSString *)valueForIsLowPowerModeEnabled:(BOOL)isLowPowerModeEnabled
-{
-  return isLowPowerModeEnabled ? @"on" : @"off";
-}
-
-- (NSDictionary *)getPowerState
-{
-#if RCT_DEV && (!TARGET_IPHONE_SIMULATOR) && !TARGET_OS_TV
-  if ([UIDevice currentDevice].isBatteryMonitoringEnabled != YES) {
-    RCTLogWarn(@"Battery monitoring is not enabled. "
-               "You need to enable monitoring with `[UIDevice currentDevice].batteryMonitoringEnabled = TRUE`");
-  }
-#endif
-#if RCT_DEV && TARGET_IPHONE_SIMULATOR && !TARGET_OS_TV
-  if ([UIDevice currentDevice].batteryState == UIDeviceBatteryStateUnknown) {
-    RCTLogWarn(@"Battery state `unknown` and monitoring disabled, this is normal for simulators and tvOS.");
-  }
-#endif
-  
-  NSArray *batteryStates = @[@"unknown", @"unplugged", @"charging", @"full"];
-  __block NSDictionary *powerState;
-  
-  [UMUtilities performSynchronouslyOnMainThread:^{
-    powerState = @{
-  #if TARGET_OS_TV
-             @"batteryLevel": 1,
-             @"batteryState": @"full",
-  #else
-             @"batteryLevel": @([UIDevice currentDevice].batteryLevel),
-             @"batteryState": batteryStates[[UIDevice currentDevice].batteryState],
-             @"isLowPowerModeEnabled": [EXDevice.class valueForIsLowPowerModeEnabled: NSProcessInfo.processInfo.isLowPowerModeEnabled],
-  #endif
-             };
-    }];
-  return powerState;
-}
-
-UM_EXPORT_METHOD_AS(getPowerStateAsync,
-                    getPowerStateAsyncWithResolver:(UMPromiseResolveBlock)resolve rejecter:(UMPromiseRejectBlock)reject)
-{
-  resolve([self getPowerState]);
-}
-
-UM_EXPORT_METHOD_AS(getBatteryLevelAsync,
-                    getBatteryLevelAsyncWithResolver:(UMPromiseResolveBlock)resolve
-                    rejecter:(UMPromiseRejectBlock)reject)
-{
-  resolve(@([[self getPowerState][@"batteryLevel"] floatValue]));
-}
-
-UM_EXPORT_METHOD_AS(isBatteryChargingAsync,
-                    isBatteryCharingAsyncWithResolver:(UMPromiseResolveBlock)resolve rejecter:(UMPromiseRejectBlock)reject)
-{
-  BOOL isCharging = [[self getPowerState][@"batteryState"] isEqualToString:@"charging"];
-  resolve(@(isCharging));
-}
-
 
 UM_EXPORT_METHOD_AS(getIPAddressAsync,
                     getIPAddressAsyncWithResolver:(UMPromiseResolveBlock)resolve rejecter:(UMPromiseRejectBlock)reject)
@@ -338,15 +221,6 @@ typedef NS_ENUM(NSInteger, DeviceType) {
   return freeSpace;
 }
 
-//- (NSString*) userAgent
-//{
-//#if TARGET_OS_TV
-//  return @"not available";
-//#else
-//  UIWebView* webView = [[UIWebView alloc] initWithFrame:CGRectZero];
-//  return [webView stringByEvaluatingJavaScriptFromString:@"navigator.userAgent"];
-//#endif
-//}
 
 - (NSDictionary *)constantsToExport
 {
@@ -357,10 +231,9 @@ typedef NS_ENUM(NSInteger, DeviceType) {
            @"brand": @"Apple",
            @"carrier": self.carrier ?: [NSNull null],
            @"deviceType": [DeviceTypeValues objectAtIndex: [self getDeviceType]] ?: [NSNull null],
-           @"deviceName": @"name here", //TODO, ADD TO JS AS WELL
+           @"deviceName": currentDevice.name, //TODO, ADD TO JS AS WELL
            @"deviceId": self.deviceId ?: [NSNull null],
            //           @"freeDiskStorage": @(self.freeDiskStorage),
-           //           @"hasNotch": @YES, // implement into the js
            //           @"isEmulator": @NO,
            @"isTablet": @(self.isTablet),
            @"manufacturer": @"Apple",
@@ -372,7 +245,6 @@ typedef NS_ENUM(NSInteger, DeviceType) {
            @"totalMemory": @(self.totalMemory),
            @"totalDiskCapacity": @(self.totalDiskCapacity),
            @"uniqueId": uniqueId,
-           @"userAgent": [NSNull null] //self.userAgent ?: [NSNull null],
            };
 }
 

@@ -38,7 +38,6 @@ export const serialNumber = ExpoDevice.serialNumber;
 export const systemName = ExpoDevice.systemName;
 export const totalMemory = ExpoDevice.totalMemory;
 export const uniqueId = ExpoDevice.uniqueId;
-export const userAgent = ExpoDevice.userAgent;
 export const isTablet = ExpoDevice.isTablet;
 export const deviceType = ExpoDevice.deviceType;
 export const deviceId = ExpoDevice.deviceId;
@@ -75,5 +74,8 @@ export async function hasSystemFeatureAsync(feature) {
 }
 export async function isPinOrFingerprintSetAsync() {
     return await ExpoDevice.isPinOrFingerprintSetAsync();
+}
+export async function getUserAgentAsync() {
+    return await ExpoDevice.getUserAgentAsync();
 }
 //# sourceMappingURL=Device.js.map

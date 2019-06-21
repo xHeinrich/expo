@@ -41,7 +41,6 @@ export const serialNumber = ExpoDevice.serialNumber;
 export const systemName = ExpoDevice.systemName;
 export const totalMemory = ExpoDevice.totalMemory;
 export const uniqueId = ExpoDevice.uniqueId;
-export const userAgent = ExpoDevice.userAgent;
 export const isTablet = ExpoDevice.isTablet;
 export const deviceType = ExpoDevice.deviceType;
 export const deviceId = ExpoDevice.deviceId;
@@ -86,4 +85,8 @@ export async function hasSystemFeatureAsync(feature: string): Promise<boolean | 
 
 export async function isPinOrFingerprintSetAsync(): Promise<boolean>{
   return await ExpoDevice.isPinOrFingerprintSetAsync();
+}
+
+export async function getUserAgentAsync(): Promise<String>{
+  return await ExpoDevice.getUserAgentAsync();
 }
